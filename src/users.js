@@ -1,5 +1,6 @@
 // in src/User.js
 import * as React from "react";
+import {auth} from "./firebase"
 // tslint:disable-next-line:no-var-requires
 import {
   Datagrid,
@@ -47,15 +48,20 @@ export const UserShow = (props) => (
   </Show>
 );
 
-export const UserCreate = (props) => (
-  <Create {...props} >
+export const UserCreate = (props) => {
+  const onSuccess = ({ data }) => {
+    auth.createUserWithEmailAndPassword(data.email,'hoanganh23')
+};
+  return (
+  <Create onSuccess={onSuccess} {...props} >
     <SimpleForm>
-      <TextInput source="id" />
+      <TextInput source="email" />
       <TextInput source="name" />
       <TextInput source="age" />
     </SimpleForm>
   </Create>
-);
+  )
+};
 
 export const UserEdit = (props) => (
   <Edit {...props}>
