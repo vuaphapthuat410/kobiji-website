@@ -4,22 +4,31 @@ import {
     FirebaseAuthProvider,
 } from 'react-admin-firebase';
 const firebaseConfig = {
-    apiKey: "AIzaSyA0p_U3GRFQSPrZxNJiQAJtEXVGkWcXP-M",
-    authDomain: "fir-itss.firebaseapp.com",
-    databaseURL: "https://fir-itss-default-rtdb.firebaseio.com",
-    projectId: "fir-itss",
-    storageBucket: "fir-itss.appspot.com",
-    messagingSenderId: "974351502349",
-    appId: "1:974351502349:web:f07ae26811e77d4e4d1944"
-  };
+  apiKey: "AIzaSyDi0U5ii2wQP2mK0xl0XdFqCGQYstwQ5oY",
+  authDomain: "itss2-32f90.firebaseapp.com",
+  projectId: "itss2-32f90",
+  storageBucket: "itss2-32f90.appspot.com",
+  messagingSenderId: "487624671126",
+  appId: "1:487624671126:web:165ee0fd92941c318c27b7"
+};
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 const options = {
-    app: firebaseApp,
     logging: true,
-    watch: ['about'],
-    dontwatch: ['resume'],
+  // rootRef: 'rootrefcollection/QQG2McwjR2Bohi9OwQzP',
+  app: firebaseApp,
+  // watch: ['posts'];
+  // dontwatch: ['comments'];
+  persistence: 'local',
+  // disableMeta: true
+  dontAddIdFieldToDoc: true,
+  lazyLoading: {
+    enabled: true,
+  },
+  firestoreCostsLogger: {
+    enabled: true,
+  },
 }
 export const authProvider = FirebaseAuthProvider(firebaseConfig,options);
 export const dataProvider = FirebaseDataProvider(firebaseConfig, options);

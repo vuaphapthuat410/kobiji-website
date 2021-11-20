@@ -9,10 +9,9 @@ import UserIcon from '@material-ui/icons/Group';
 import CustomLoginPage from './CustomLoginPage';
 import {authProvider,dataProvider,auth} from './firebase'
 
-const dataProvider1 = jsonServerProvider('https://jsonplaceholder.typicode.com');
 function App() {
     return (
-        <Admin dataProvider={dataProvider1} dashboard={Dashboard} authProvider={authProvider} loginPage={CustomLoginPage}>
+        <Admin dataProvider={dataProvider} dashboard={Dashboard} authProvider={authProvider} loginPage={CustomLoginPage}>
             <Resource
                 name="posts"
                 icon={PostIcon}
