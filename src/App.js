@@ -4,6 +4,7 @@ import Dashboard from "./Dashboard";
 import { PostList, PostShow, PostCreate, PostEdit } from "./posts";
 import { UserList, UserShow, UserCreate, UserEdit } from "./users";
 import { TalentList, TalentShow, TalentCreate, TalentEdit } from "./talents.js";
+import { AccountList, AccountShow, AccountCreate, AccountEdit } from "./accounts.js";
 import jsonServerProvider from "ra-data-json-server";
 import PostIcon from "@material-ui/icons/Book";
 import UserIcon from "@material-ui/icons/Group";
@@ -41,6 +42,14 @@ function App() {
         show={TalentShow}
         create={TalentCreate}
         edit={TalentEdit}
+      />
+      <Resource
+        name="accounts"
+        icon={UserIcon}
+        list={AccountList}
+        show={AccountShow}
+        create={AccountCreate}
+        edit={AccountEdit}
       />
     </Admin>
   );
