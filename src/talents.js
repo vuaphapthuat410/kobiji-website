@@ -1,5 +1,6 @@
 // in src/User.js
 import * as React from "react";
+import {auth} from "./firebase"
 // tslint:disable-next-line:no-var-requires
 import {
   Datagrid,
@@ -29,20 +30,20 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 
 const genderList = [
-  { id: 0, name: "女" },
-  { id: 1, name: "男" },
+  { id: "女", name: "女" },
+  { id: "男", name: "男" },
 ];
 
 const statusList = [
-  { id: 0, name: "新規" },
-  { id: 1, name: "学中" },
-  { id: 2, name: "卒業" },
+  { id: "新規", name: "新規" },
+  { id: "新規", name: "学中" },
+  { id: "卒業", name: "卒業" },
 ];
 
 const countryList = [
-  { id: 0, name: "ベトナム" },
-  { id: 1, name: "日本" },
-  { id: 2, name: "イギリス" },
+  { id: "ベトナム", name: "ベトナム" },
+  { id: "日本", name: "日本" },
+  { id: "イギリス", name: "イギリス" },
 ];
 
 const TalentFilter = (props) => (
@@ -122,9 +123,13 @@ const CreateActionList = ({ basePath, data }) => (
   </TopToolbar>
 );
 
-const CreateToolbar = (props) => (
+const CreateToolbar = (props) => {
+  const onSuccess = ({ data }) => {
+    auth.createUserWithEmailAndPassword(data.mailAddress,'hoanganh23')
+  };
+  return(
   <Toolbar {...props}>
-    <SaveButton label="追加" redirect="show" submitOnEnter={true} />
+    <SaveButton label="追加" redirect="show" submitOnEnter={true}/>
     <Button
       variant="contained"
       color="secondary"
@@ -134,21 +139,25 @@ const CreateToolbar = (props) => (
       キャンセル
     </Button>
   </Toolbar>
-);
+)};
 
-export const TalentCreate = (props) => (
-  <Create {...props} actions={<CreateActionList />}>
-    <SimpleForm toolbar={<CreateToolbar />}>
+export const TalentCreate = (props) => {
+  const onSuccess = ({ data }) => {
+    auth.createUserWithEmailAndPassword(data.mailAddress,'hoanganh23')
+  };
+  return(
+  <Create {...props} actions={<CreateActionList /> } onSuccess={onSuccess}>
+    <SimpleForm toolbar={<CreateToolbar />}> 
       {/* <TextInput source="id" label="ID" /> */}
       <TextInput source="name" label="名前" />
       <TextInput source="mailAddress" label="メールアドレス" />
       <DateInput source="birthday" label="生年月日" />
-      <SelectInput source="gender" label="セックス" choices={genderList} />
+      <SelectInput source="gender" label="性別" choices={genderList} />
       <SelectInput source="status" label="ステータス" choices={statusList} />
       <SelectInput source="country" label="国籍" choices={countryList} />
     </SimpleForm>
   </Create>
-);
+)};
 
 const EditActionList = ({ basePath, data }) => (
   <TopToolbar>
@@ -168,9 +177,9 @@ export const TalentEdit = (props) => (
       <TextInput source="name" label="名前" />
       <TextInput source="mailAddress" label="メールアドレス" />
       <DateInput source="birthday" label="生年月日" />
-      <SelectInput source="gender" label="セックス" choices={genderList} />
+      <SelectInput source="gender" label="性別" choices={genderList} />
       <SelectInput source="status" label="ステータス" choices={statusList} />
-      <SelectInput source="country" label="国籍" choices={countryList} />
+      <SelectInput source="country" label="国籍" choices={countryList}  />
     </SimpleForm>
   </Edit>
 );

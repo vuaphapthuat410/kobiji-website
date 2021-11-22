@@ -19,22 +19,22 @@ function App() {
       authProvider={authProvider}
       loginPage={CustomLoginPage}
     >
-      <Resource
+      {/* <Resource
         name="posts"
         icon={PostIcon}
         list={PostList}
         show={PostShow}
         create={PostCreate}
         edit={PostEdit}
-      />
-      {/* <Resource
+      /> */}
+      <Resource
         name="users"
         icon={UserIcon}
         list={UserList}
         show={UserShow}
         create={UserCreate}
         edit={UserEdit}
-      /> */}
+      />
       <Resource
         name="talents"
         icon={UserIcon}

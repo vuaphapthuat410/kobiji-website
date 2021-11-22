@@ -1,5 +1,6 @@
   // in src/User.js
   import * as React from "react";
+  import {auth} from "./firebase"
   // tslint:disable-next-line:no-var-requires
   import {
     Datagrid,
@@ -28,9 +29,9 @@
   import Button from "@material-ui/core/Button";
 
   const roleList = [
-    { id: 0, name: "管理" },
-    { id: 1, name: "教師" },
-    { id: 2, name: "ユーザー" },
+    { id: "管理", name: "管理" },
+    { id: "教師", name: "教師" },
+    { id: "ユーザー", name: "ユーザー" },
   ];
 
   const AccountFilter = (props) => (
@@ -119,20 +120,25 @@
     </Toolbar>
   );
 
-  export const AccountCreate = (props) => (
+  export const AccountCreate = (props) => {
+    const onSuccess = ({ data }) => {
+      auth.createUserWithEmailAndPassword(data.mail, data.password)
+    };
+    return(
     <Create
       {...props}
       actions={<CreateActionList />}
+      onSuccess={onSuccess}
     >
       <SimpleForm toolbar={<CreateToolbar />}>
-        <TextInput source="id" label="ID" />
+        {/* <TextInput source="id" label="ID" /> */}
         <TextInput source="name" label="名前" />
         <TextInput source="mail" label="メールアドレス" />
         <SelectInput source="role" label="役割" choices={roleList} />
-        <TextInput source="password" label="パスワード" />
+        <TextInput source="password" label="パスワード"/>
       </SimpleForm>
     </Create>
-  );
+  )};
 
   const EditActionList = ({ basePath, data }) => (
     <TopToolbar>
