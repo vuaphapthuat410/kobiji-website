@@ -28,9 +28,8 @@
   import Button from "@material-ui/core/Button";
 
   const genderList = [
-    { id: 0, name: "管理" },
-    { id: 1, name: "教師" },
-    { id: 0, name: "ユーザー" },
+    { id: 0, name: "マネージャー" },
+    { id: 1, name: "タレント" },
   ];
 
   const AccountFilter = (props) => (
