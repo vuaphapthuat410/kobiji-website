@@ -27,10 +27,10 @@
   import DeleteIcon from "@material-ui/icons/Delete";
   import Button from "@material-ui/core/Button";
 
-  const genderList = [
+  const roleList = [
     { id: 0, name: "管理" },
     { id: 1, name: "教師" },
-    { id: 0, name: "ユーザー" },
+    { id: 2, name: "ユーザー" },
   ];
 
   const AccountFilter = (props) => (
@@ -128,7 +128,7 @@
         <TextInput source="id" label="ID" />
         <TextInput source="name" label="名前" />
         <TextInput source="mail" label="メールアドレス" />
-        <SelectInput source="gender" label="役割" choices={genderList} />
+        <SelectInput source="role" label="役割" choices={roleList} />
         <TextInput source="password" label="パスワード" />
       </SimpleForm>
     </Create>
@@ -153,7 +153,7 @@
       <SimpleForm>
         <TextInput source="name" label="名前" />
         <TextInput source="mail" label="メールアドレス" />
-        <TextInput source="role" label="役割" />
+        <SelectInput source="role" label="役割" choices={roleList}/>
       </SimpleForm>
     </Edit>
   );

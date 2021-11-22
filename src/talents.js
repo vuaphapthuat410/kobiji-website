@@ -139,7 +139,7 @@ const CreateToolbar = (props) => (
 export const TalentCreate = (props) => (
   <Create {...props} actions={<CreateActionList />}>
     <SimpleForm toolbar={<CreateToolbar />}>
-      <TextInput source="id" label="ID" />
+      {/* <TextInput source="id" label="ID" /> */}
       <TextInput source="name" label="名前" />
       <TextInput source="mailAddress" label="メールアドレス" />
       <DateInput source="birthday" label="生年月日" />
@@ -164,7 +164,7 @@ const EditActionList = ({ basePath, data }) => (
 export const TalentEdit = (props) => (
   <Edit {...props} actions={<EditActionList />}>
     <SimpleForm>
-      <TextInput source="id" label="ID" />
+      {/* <TextInput source="id" label="ID" /> */}
       <TextInput source="name" label="名前" />
       <TextInput source="mailAddress" label="メールアドレス" />
       <DateInput source="birthday" label="生年月日" />
