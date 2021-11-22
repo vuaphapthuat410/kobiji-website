@@ -13,6 +13,7 @@
     SimpleForm,
     TextField,
     TextInput,
+    PasswordInput,
     ShowButton,
     EditButton,
     DeleteButton,
@@ -135,7 +136,7 @@
         <TextInput source="name" label="名前" />
         <TextInput source="mail" label="メールアドレス" />
         <SelectInput source="role" label="役割" choices={roleList} />
-        <TextInput source="password" label="パスワード"/>
+        <PasswordInput source="password" label="パスワード"/>
       </SimpleForm>
     </Create>
   )};
