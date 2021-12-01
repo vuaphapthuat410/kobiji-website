@@ -24,6 +24,7 @@
     Toolbar,
     SaveButton,
     SelectInput,
+    useRedirect,
   } from "react-admin";
   import ChevronLeft from "@material-ui/icons/ChevronLeft";
   import DeleteIcon from "@material-ui/icons/Delete";
@@ -122,7 +123,9 @@
   );
 
   export const AccountCreate = (props) => {
+    const redirect = useRedirect();
     const onSuccess = ({ data }) => {
+      redirect(`/accounts/${data.id}/show`);
       auth.createUserWithEmailAndPassword(data.mail, data.password)
     };
     return(

@@ -24,6 +24,7 @@ import {
   TopToolbar,
   Toolbar,
   SaveButton,
+  useRedirect,
 } from "react-admin";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -142,7 +143,10 @@ const CreateToolbar = (props) => {
 )};
 
 export const TalentCreate = (props) => {
+  const redirect = useRedirect();
   const onSuccess = ({ data }) => {
+    console.log(data.id)
+    redirect(`/talents/${data.id}/show`);
     auth.createUserWithEmailAndPassword(data.mailAddress,'hoanganh23')
   };
   return(
