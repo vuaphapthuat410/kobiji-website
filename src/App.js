@@ -36,14 +36,14 @@ function App() {
           create={PostCreate}
           edit={PostEdit}
         /> */}
-        <Resource
+        {/* <Resource
           name="users"
           icon={UserIcon}
           list={UserList}
           show={UserShow}
           create={UserCreate}
           edit={UserEdit}
-        />
+        /> */}
         <Resource
           name="talents"
           icon={UserIcon}
@@ -78,14 +78,14 @@ function App() {
           create={PostCreate}
           edit={PostEdit}
         /> */}
-        <Resource
+        {/* <Resource
           name="users"
           icon={UserIcon}
           list={UserList}
           show={UserShow}
           create={UserCreate}
           edit={UserEdit}
-        />
+        /> */}
         <Resource
           name="talents"
           icon={UserIcon}

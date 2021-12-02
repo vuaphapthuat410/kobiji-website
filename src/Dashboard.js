@@ -29,7 +29,7 @@ const events = [
 function Dashboard(){
     return(
         <Card>
-        <CardHeader title="Welcome to the administration" />
+        <CardHeader title="マイスケジュール" />
         <CardContent>kobiji</CardContent>
         <Calendar
         culture = 'ja'

@@ -18,6 +18,7 @@ import {
   DeleteButton,
   CreateButton,
   ExportButton,
+  DateField,
   DateInput,
   SelectInput,
   ListButton,
@@ -25,6 +26,10 @@ import {
   Toolbar,
   SaveButton,
   useRedirect,
+  email,
+  required,
+  minLength,
+  maxLength,
 } from "react-admin";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -46,6 +51,13 @@ const countryList = [
   { id: "日本", name: "日本" },
   { id: "イギリス", name: "イギリス" },
 ];
+
+const validateEmail = email();
+const validateName = [required(), minLength(2), maxLength(64)];
+const validateBirthday = [required()];
+const validateGender = required();
+const validateStatus = required();
+const validateCountry = required();
 
 const TalentFilter = (props) => (
   <Filter {...props}>
@@ -71,11 +83,11 @@ export const TalentList = (props) => (
     >
       <Datagrid>
         <TextField source="name" label="名前" />
-        <TextField source="mailAddress" label="メールアドレス" />
+        <TextField source="mailAddress" label="メールアドレス"/>
         <TextField source="birthday" label="生年月日" />
         <TextField source="status" label="ステータス" />
         <TextField source="country" label="国籍" />
-        <TextField disabled source="createdate" label="作成日" />
+        <DateField disabled showTime="false" source="createdate" label="作成日" />
         <ShowButton label="詳細" />
         <EditButton label="変更" />
         <DeleteButton label="削除" redirect={false} />
@@ -153,12 +165,12 @@ export const TalentCreate = (props) => {
   <Create {...props} actions={<CreateActionList /> } onSuccess={onSuccess}>
     <SimpleForm toolbar={<CreateToolbar />}> 
       {/* <TextInput source="id" label="ID" /> */}
-      <TextInput source="name" label="名前" />
-      <TextInput source="mailAddress" label="メールアドレス" />
-      <DateInput source="birthday" label="生年月日" />
-      <SelectInput source="gender" label="性別" choices={genderList} />
-      <SelectInput source="status" label="ステータス" choices={statusList} />
-      <SelectInput source="country" label="国籍" choices={countryList} />
+      <TextInput source="name" label="名前" validate={validateName}/>
+      <TextInput source="mailAddress" label="メールアドレス" validate={validateEmail}/>
+      <DateInput source="birthday" label="生年月日" validate={validateBirthday}/>
+      <SelectInput source="gender" label="性別" choices={genderList} validate={validateGender}/>
+      <SelectInput source="status" label="ステータス" choices={statusList} validate={validateStatus}/>
+      <SelectInput source="country" label="国籍" choices={countryList} validate={validateCountry}/>
     </SimpleForm>
   </Create>
 )};
@@ -178,12 +190,12 @@ export const TalentEdit = (props) => (
   <Edit {...props} actions={<EditActionList />}>
     <SimpleForm>
       {/* <TextInput source="id" label="ID" /> */}
-      <TextInput source="name" label="名前" />
-      <TextInput source="mailAddress" label="メールアドレス" />
-      <DateInput source="birthday" label="生年月日" />
-      <SelectInput source="gender" label="性別" choices={genderList} />
-      <SelectInput source="status" label="ステータス" choices={statusList} />
-      <SelectInput source="country" label="国籍" choices={countryList}  />
+      <TextInput source="name" label="名前" validate={validateName}/>
+      <TextInput source="mailAddress" label="メールアドレス" validate={validateEmail}/>
+      <DateInput source="birthday" label="生年月日" validate={validateBirthday}/>
+      <SelectInput source="gender" label="性別" choices={genderList} validate={validateGender}/>
+      <SelectInput source="status" label="ステータス" choices={statusList} validate={validateStatus}/>
+      <SelectInput source="country" label="国籍" choices={countryList} validate={validateCountry}/>
     </SimpleForm>
   </Edit>
 );

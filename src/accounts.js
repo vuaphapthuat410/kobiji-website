@@ -13,6 +13,7 @@
     SimpleForm,
     TextField,
     TextInput,
+    DateField,
     PasswordInput,
     ShowButton,
     EditButton,
@@ -25,6 +26,10 @@
     SaveButton,
     SelectInput,
     useRedirect,
+    email,
+    required,
+    minLength,
+    maxLength,
   } from "react-admin";
   import ChevronLeft from "@material-ui/icons/ChevronLeft";
   import DeleteIcon from "@material-ui/icons/Delete";
@@ -35,6 +40,11 @@
     { id: "教師", name: "教師" },
     { id: "ユーザー", name: "ユーザー" },
   ];
+
+  const validateEmail = email();
+  const validateName = [required(), minLength(2), maxLength(64)];
+  const validateRole = required();
+  const validatePasswd = [required(), minLength(8), maxLength(200)]
 
   const AccountFilter = (props) => (
     <Filter {...props}>
@@ -62,6 +72,7 @@
           <TextField source="name" label="名前" />
           <TextField source="mail" label="メールアドレス" />
           <TextField source="role" label="役割" />
+          <DateField disabled showTime="false" source="createdate" label="作成日" />
           <ShowButton label="詳細" />
           <EditButton label="変更" />
           <DeleteButton label="削除" redirect={false} />
@@ -136,10 +147,10 @@
     >
       <SimpleForm toolbar={<CreateToolbar />}>
         {/* <TextInput source="id" label="ID" /> */}
-        <TextInput source="name" label="名前" />
-        <TextInput source="mail" label="メールアドレス" />
-        <SelectInput source="role" label="役割" choices={roleList} />
-        <PasswordInput source="password" label="パスワード"/>
+        <TextInput source="name" label="名前" validate={validateName}/>
+        <TextInput source="mail" label="メールアドレス" validate={validateEmail}/>
+        <SelectInput source="role" label="役割" choices={roleList} validate={validateRole}/>
+        <PasswordInput source="password" label="パスワード" validate={validatePasswd}/>
       </SimpleForm>
     </Create>
   )};
@@ -161,9 +172,9 @@
       actions={<EditActionList />}
     >
       <SimpleForm>
-        <TextInput source="name" label="名前" />
-        <TextInput source="mail" label="メールアドレス" />
-        <SelectInput source="role" label="役割" choices={roleList}/>
+        <TextInput source="name" label="名前" validate={validateName}/>
+        <TextInput source="mail" label="メールアドレス" validate={validateEmail}/>
+        <SelectInput source="role" label="役割" choices={roleList} validate={validateRole}/>
       </SimpleForm>
     </Edit>
   );
