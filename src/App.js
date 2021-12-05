@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Admin, Resource, ListGuesser, EditGuesser , useGetIdentity} from "react-admin";
+import {
+  Admin,
+  Resource,
+} from "react-admin";
 import Dashboard from "./Dashboard";
-import { PostList, PostShow, PostCreate, PostEdit } from "./posts";
-import { UserList, UserShow, UserCreate, UserEdit } from "./users";
 import { TalentList, TalentShow, TalentCreate, TalentEdit } from "./talents.js";
-import { AccountList, AccountShow, AccountCreate, AccountEdit } from "./accounts.js";
-import jsonServerProvider from "ra-data-json-server";
-import PostIcon from "@material-ui/icons/Book";
+import {
+  AccountList,
+  AccountShow,
+  AccountCreate,
+  AccountEdit,
+} from "./accounts.js";
+import { EventList, EventShow, EventCreate, EventEdit } from "./events.js";
 import UserIcon from "@material-ui/icons/Group";
+import EventIcon from "@material-ui/icons/Event";
 import CustomLoginPage from "./CustomLoginPage";
 import CustomLayout from "./CustomLayout";
 import { authProvider, dataProvider, auth } from "./firebase";
 
 function App() {
-  const [email,setEmail] = useState("")
+  const [email, setEmail] = useState("");
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      if (user){
+      if (user) {
         setEmail(user.email);
-        localStorage.setItem('user', JSON.stringify(user));
       }
     });
   }, []);
-  if (email ==='admin@gmail.com'){
+  if (email === "admin@gmail.com") {
     return (
       <Admin
         layout={CustomLayout}
@@ -62,6 +67,14 @@ function App() {
           show={AccountShow}
           create={AccountCreate}
           edit={AccountEdit}
+        />
+        <Resource
+          name="events"
+          icon={EventIcon}
+          list={EventList}
+          create={EventCreate}
+          show={EventShow}
+          edit={EventEdit}
         />
       </Admin>
     );
