@@ -54,6 +54,14 @@ function App() {
           create={TalentCreate}
           edit={TalentEdit}
         />
+        <Resource
+          name="accounts"
+          icon={UserIcon}
+          list={AccountList}
+          show={AccountShow}
+          create={AccountCreate}
+          edit={AccountEdit}
+        />
         <Resource 
           name="events"
           icon={EventIcon}
