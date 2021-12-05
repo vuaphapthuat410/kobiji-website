@@ -5,9 +5,11 @@ import { PostList, PostShow, PostCreate, PostEdit } from "./posts";
 import { UserList, UserShow, UserCreate, UserEdit } from "./users";
 import { TalentList, TalentShow, TalentCreate, TalentEdit } from "./talents.js";
 import { AccountList, AccountShow, AccountCreate, AccountEdit } from "./accounts.js";
+import { EventList, EventShow, EventCreate, EventEdit } from "./events.js";
 import jsonServerProvider from "ra-data-json-server";
 import PostIcon from "@material-ui/icons/Book";
 import UserIcon from "@material-ui/icons/Group";
+import EventIcon from "@material-ui/icons/Event";
 import CustomLoginPage from "./CustomLoginPage";
 import { authProvider, dataProvider, auth } from "./firebase";
 
@@ -52,13 +54,13 @@ function App() {
           create={TalentCreate}
           edit={TalentEdit}
         />
-        <Resource
-          name="accounts"
-          icon={UserIcon}
-          list={AccountList}
-          show={AccountShow}
-          create={AccountCreate}
-          edit={AccountEdit}
+        <Resource 
+          name="events"
+          icon={EventIcon}
+          list={EventList}
+          create={EventCreate}
+          show={EventShow}
+          edit={EventEdit}
         />
       </Admin>
     );
