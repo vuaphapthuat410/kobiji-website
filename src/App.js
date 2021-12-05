@@ -9,6 +9,7 @@ import jsonServerProvider from "ra-data-json-server";
 import PostIcon from "@material-ui/icons/Book";
 import UserIcon from "@material-ui/icons/Group";
 import CustomLoginPage from "./CustomLoginPage";
+import CustomLayout from "./CustomLayout";
 import { authProvider, dataProvider, auth } from "./firebase";
 
 function App() {
@@ -16,13 +17,15 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user){
-      setEmail(user.email)
+        setEmail(user.email);
+        localStorage.setItem('user', JSON.stringify(user));
       }
     });
   }, []);
   if (email ==='admin@gmail.com'){
     return (
       <Admin
+        layout={CustomLayout}
         dataProvider={dataProvider}
         dashboard={Dashboard}
         authProvider={authProvider}
