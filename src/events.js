@@ -79,7 +79,7 @@ function getRole() {
 
 const EventFilter = (props) => (
   <Filter {...props}>
-    <TextInput label="探索" source="name" alwaysOn />
+    <TextInput label="探索" source="title" alwaysOn />
   </Filter>
 );
 
