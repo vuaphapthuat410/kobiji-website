@@ -41,7 +41,6 @@ import Button from "@material-ui/core/Button";
 
 const validateTitle = [required(), minLength(2), maxLength(64)];
 const validateRequired = required();
-const account_id = auth.currentUser?.email ?? "";
 
 var users = new Map();
 users.set("admin@gmail.com", { name: "admin", role: "ユーザー" });
@@ -73,22 +72,21 @@ function userChoices() {
   });
 }
 
-function getRole() {
-  return users.get(account_id)?.role;
-}
-
 const EventFilter = (props) => (
   <Filter {...props}>
     <TextInput label="探索" source="title" alwaysOn />
   </Filter>
 );
 
-const ListActions = (props) => (
+const ListActions = (props) => {
+  let account_id = auth.currentUser?.email ?? "";
+  console.log(account_id);
+  return (
   <div>
-    {getRole() === "ユーザー" && <CreateButton label="追加" />}
+    {users.get(account_id)?.role === "ユーザー" && <CreateButton label="追加" />}
     <ExportButton label="エクスポート" />
   </div>
-);
+)};
 
 const NameField = (props) => {
   const record = useRecordContext(props);
@@ -102,7 +100,10 @@ const NameField = (props) => {
   );
 };
 
-export const EventList = (props) => (
+export const EventList = (props) => {
+  let account_id = auth.currentUser?.email ?? "";
+  console.log(account_id);
+  return (
   <>
     <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
     <List
@@ -124,14 +125,16 @@ export const EventList = (props) => (
         />
         <NameField label="参加者" />
         <ShowButton label="詳細" />
-        {getRole() === "ユーザー" && <EditButton label="変更" />}
-        {getRole() === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
+        {users.get(account_id)?.role === "ユーザー" && <EditButton label="変更" />}
+        {users.get(account_id)?.role === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
       </Datagrid>
     </List>
   </>
-);
+)};
 
 const ShowActionList = ({ basePath, data }) => {
+  let account_id = auth.currentUser?.email ?? "";
+  console.log(account_id);
   return (
     <TopToolbar>
       <ListButton
@@ -139,7 +142,7 @@ const ShowActionList = ({ basePath, data }) => {
         label="イベント一覧へ"
         icon={<ChevronLeft />}
       />
-      {getRole() === "ユーザー" && <EditButton label="イベント更新" to="edit" /> }
+      {users.get(account_id)?.role === "ユーザー" && <EditButton label="イベント更新" to="edit" /> }
     </TopToolbar>
   );
 };
