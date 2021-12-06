@@ -26,8 +26,8 @@ function Dashboard() {
             notif.members_read !== undefined &&
             notif.members_read[account_id] !== undefined
         );
-        newData = newData.map((e, index) => {
-          return { id: index, title: e.title, start: e.date, end: new Date(e.date.getTime() + 17*3600000)}
+        newData = newData.map(e => {
+          return { title: e.title, start: e.date, end: new Date(e.date.getTime() + 17*3600000), allDay: true };
         });
         console.log(newData);
         setEvents(newData);

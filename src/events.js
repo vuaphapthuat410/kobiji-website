@@ -1,4 +1,5 @@
 import * as React from "react";
+import { auth } from "./firebase";
 import firebase from "firebase";
 // tslint:disable-next-line:no-var-requires
 import {
@@ -40,6 +41,7 @@ import Button from "@material-ui/core/Button";
 
 const validateTitle = [required(), minLength(2), maxLength(64)];
 const validateRequired = required();
+const account_id = auth.currentUser?.email ?? "";
 
 var users = new Map();
 users.set("admin@gmail.com", { name: "admin", role: "ユーザー" });
@@ -64,10 +66,15 @@ db.collection("talents")
       });
     });
   });
+
 function userChoices() {
   return Array.from(users).map((pair) => {
     return { id: pair[0], name: `(${pair[1].role}) ${pair[1].name}` };
   });
+}
+
+function getRole() {
+  return users.get(account_id)?.role;
 }
 
 const EventFilter = (props) => (
@@ -78,7 +85,7 @@ const EventFilter = (props) => (
 
 const ListActions = (props) => (
   <div>
-    <CreateButton label="追加" />
+    {getRole() === "ユーザー" && <CreateButton label="追加" />}
     <ExportButton label="エクスポート" />
   </div>
 );
@@ -117,8 +124,8 @@ export const EventList = (props) => (
         />
         <NameField label="参加者" />
         <ShowButton label="詳細" />
-        <EditButton label="変更" />
-        <DeleteButton label="削除" redirect={false} />
+        {getRole() === "ユーザー" && <EditButton label="変更" />}
+        {getRole() === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
       </Datagrid>
     </List>
   </>
@@ -132,7 +139,7 @@ const ShowActionList = ({ basePath, data }) => {
         label="イベント一覧へ"
         icon={<ChevronLeft />}
       />
-      <EditButton label="イベント更新" to="edit" />
+      {getRole() === "ユーザー" && <EditButton label="イベント更新" to="edit" /> }
     </TopToolbar>
   );
 };

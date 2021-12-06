@@ -81,6 +81,7 @@ function App() {
   } else {
     return (
       <Admin
+      layout={CustomLayout}
         dataProvider={dataProvider}
         dashboard={Dashboard}
         authProvider={authProvider}
@@ -102,13 +103,19 @@ function App() {
           create={UserCreate}
           edit={UserEdit}
         /> */}
-        <Resource
+        {/* <Resource
           name="talents"
           icon={UserIcon}
           list={TalentList}
           show={TalentShow}
           create={TalentCreate}
           edit={TalentEdit}
+        /> */}
+        <Resource
+          name="events"
+          icon={EventIcon}
+          list={EventList}
+          show={EventShow}
         />
       </Admin>
     );

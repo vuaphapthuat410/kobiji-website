@@ -41,7 +41,7 @@ const NotificationList = () => {
   const dataProvider = useDataProvider();
   const [notifs, setNotifs] = React.useState();
   const [loading, setLoading] = React.useState(true);
-  const account_id = auth.currentUser.email;
+  const account_id = auth.currentUser?.email ?? "";
 
   React.useEffect(() => {
     dataProvider
