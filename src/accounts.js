@@ -37,8 +37,7 @@
 
   const roleList = [
     { id: "管理", name: "管理" },
-    { id: "教師", name: "教師" },
-    { id: "ユーザー", name: "ユーザー" },
+    { id: "アドミン", name: "アドミン" },
   ];
 
   const validateEmail = email();
