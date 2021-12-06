@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useDataProvider, useMutation, Loading, Error } from "react-admin";
+import { useDataProvider, useMutation, Loading, } from "react-admin";
 import { auth } from "./firebase";
 import { Notifications, RemoveCircle, Check } from "@material-ui/icons";
 import {
@@ -27,9 +27,9 @@ const ReadButton = ({ record, member, notifs, setNotifs }) => {
   return (
     <IconButton size="small" onClick={updateRead} disabled={loading || loaded}>
       {loaded ? (
-        <Check fontsize="inherit" />
+        <Check fontSize="inherit" />
       ) : (
-        <RemoveCircle fontsize="inherit" />
+        <RemoveCircle fontSize="inherit" color="primary"/>
       )}
     </IconButton>
   );
@@ -41,7 +41,6 @@ const NotificationList = () => {
   const dataProvider = useDataProvider();
   const [notifs, setNotifs] = React.useState();
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState();
   const account_id = auth.currentUser.email;
 
   React.useEffect(() => {
@@ -60,13 +59,11 @@ const NotificationList = () => {
         setLoading(false);
       })
       .catch((error) => {
-        setError(error);
         setLoading(false);
       });
   }, [dataProvider, account_id]);
 
   if (loading) return <Loading />;
-  if (error) return <Error />;
   if (!notifs || !notifs[0])
     return (
       <>
@@ -90,7 +87,7 @@ const NotificationList = () => {
                 }}
                 href={`/events/${notif.id}/show`}
               >
-                {read + notif.title}
+                {notif.title}
               </a>
             }
             primaryTypographyProps={{ variant: "h6", noWrap: true }}
@@ -102,7 +99,7 @@ const NotificationList = () => {
               >
                 {notif.date.toDateString()} - イベントに招待されました。
                 {read ? (
-                  ""
+                  <Check fontSize="inherit" />
                 ) : (
                   <ReadButton
                     record={notif}

@@ -2,31 +2,42 @@ import * as React from "react";
 import { Card, CardContent, CardHeader } from '@material-ui/core';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { auth } from "./firebase";
+import { useDataProvider, Loading } from "react-admin";
 import moment from 'moment'
 import 'moment/locale/ja'
 
 const localizer = momentLocalizer(moment)
-const events = [
-    {
-      id: 0,
-      title: 'Meeting',
-      start: moment({ hours: 8 }).toDate(),
-      end: moment({ hours: 10 }).toDate(),
-    },
-    {
-      id: 1,
-      title: 'Lunch',
-      start: moment({ hours: 12 }).toDate(),
-      end: moment({ hours: 13 }).toDate()
-    },
-    {
-      id: 2,
-      title: 'Coding',
-      start: moment({ hours: 14 }).toDate(),
-      end: moment({ hours: 17 }).toDate(),
-    },
-  ];
-function Dashboard(){
+function Dashboard() {
+  const dataProvider = useDataProvider();
+  const [events, setEvents] = React.useState();
+  const [loading, setLoading] = React.useState(true);
+  const account_id = auth.currentUser?.email ?? "";
+
+  React.useEffect(() => {
+    dataProvider
+      .getList("events", {
+        pagination: { page: 1, perPage: 100 },
+        filter: {},
+      })
+      .then(({ data }) => {
+        let newData = data.filter(
+          (notif) =>
+            notif.members_read !== undefined &&
+            notif.members_read[account_id] !== undefined
+        );
+        newData = newData.map((e, index) => {
+          return { id: index, title: e.title, start: e.date, end: new Date(e.date.getTime() + 17*3600000)}
+        });
+        console.log(newData);
+        setEvents(newData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  }, [dataProvider, account_id]);
+  if (loading) return <Loading />;
     return(
         <Card>
         <CardHeader title="マイスケジュール" />
