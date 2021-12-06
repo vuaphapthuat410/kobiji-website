@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: "1:487624671126:web:165ee0fd92941c318c27b7"
 };
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+export const firebaseApp = firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 const options = {
     logging: true,
