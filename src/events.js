@@ -119,7 +119,9 @@ export const EventList = () => {
       }
   });
   const even = (element) => element  === account_id;
-  const data1 = data.filter(value=> value.members.some(even))
+  
+  let data1 = []
+  if (data) {data1=data.filter(value=> value.members.some(even))}
   if (loading) {
       return <Loading />
   }
