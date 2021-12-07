@@ -85,7 +85,7 @@ const NotificationList = () => {
                 style={{
                   fontWeight: read ? "normal" : "bold",
                 }}
-                href={`/events/${notif.id}/show`}
+                href={`/#/events/${notif.id}/show`}
               >
                 {notif.title}
               </a>

@@ -1,4 +1,5 @@
-import * as React from "react";
+import  React , {useState} from "react";
+import keyBy from 'lodash/keyBy';
 import { auth } from "./firebase";
 import firebase from "firebase";
 // tslint:disable-next-line:no-var-requires
@@ -33,6 +34,9 @@ import {
   minLength,
   maxLength,
   useRecordContext,
+  useQuery,
+  Pagination,
+  Loading,
 } from "react-admin";
 import { Chip } from "@material-ui/core";
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
@@ -100,7 +104,63 @@ const NameField = (props) => {
   );
 };
 
-export const EventList = (props) => {
+export const EventList = () => {
+  let account_id = auth.currentUser?.email ?? "";
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [sort, setSort] = useState({ field: 'id', order: 'ASC' })
+  const { data, total, loading, error } = useQuery({
+      type: 'getList',
+      resource: 'events',
+      payload: {
+          pagination: { page, perPage },
+          sort,
+          filter: {},
+      }
+  });
+  const even = (element) => element  === account_id;
+  const data1 = data.filter(value=> value.members.some(even))
+  if (loading) {
+      return <Loading />
+  }
+  if (error) {
+      return <p>ERROR: {error}</p>
+  }
+  return (
+      <>
+          <Datagrid 
+              data={keyBy(data1, 'id')}
+              ids={data1.map(({ id }) => id)}
+              currentSort={sort}
+              setSort={(field, order) => setSort({ field, order })}
+          >
+          <TextField source="title" label="タイトル" />
+          <TextField source="description" label="内容" />
+          <BooleanField source="active" label="開催する" />
+          <DateField
+            disabled
+            locales="ja-JP"
+            options={{ dateStyle: "long" }}
+            source="date"
+            label="日時"
+          />
+          <NameField label="参加者" />
+          <ShowButton label="詳細" />
+          {users.get(account_id)?.role === "ユーザー" && <EditButton label="変更" />}
+          {users.get(account_id)?.role === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
+          </Datagrid>
+          <Pagination
+              page={page}
+              setPage={setPage}
+              perPage={perPage}
+              setPerPage={setPerPage}
+              total={total}
+          />
+      </>
+  );
+}
+
+export const EventList1 = (props) => {
   let account_id = auth.currentUser?.email ?? "";
   console.log(account_id);
   return (
