@@ -29,7 +29,7 @@ function App() {
         dataProvider
         .getList("accounts", {
           pagination: { page: 1, perPage: 1000 },
-          filter: {"description":"test4"},
+          filter: {},
         })
         .then(({ data }) => {
           const index = data.findIndex(value => value.mail === user.email)
@@ -104,7 +104,9 @@ function App() {
             name="events"
             icon={EventIcon}
             list={EventList}
+            create={EventCreate}
             show={EventShow}
+            edit={EventEdit}
           />
         </Admin>
       );
@@ -121,9 +123,7 @@ function App() {
           name="events"
           icon={EventIcon}
           list={EventList}
-          create={EventCreate}
           show={EventShow}
-          edit={EventEdit}
         />
         </Admin>
       );

@@ -143,14 +143,14 @@ const CreateToolbar = (props) => {
   return(
   <Toolbar {...props}>
     <SaveButton label="追加" redirect="show" submitOnEnter={true}/>
-    <Button
+    {/* <Button
       variant="contained"
       color="secondary"
       startIcon={<DeleteIcon />}
       style={{ marginLeft: "10px" }}
     >
       キャンセル
-    </Button>
+    </Button> */}
   </Toolbar>
 )};
 

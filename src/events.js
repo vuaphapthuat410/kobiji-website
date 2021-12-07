@@ -47,7 +47,7 @@ const validateTitle = [required(), minLength(2), maxLength(64)];
 const validateRequired = required();
 
 var users = new Map();
-users.set("admin@gmail.com", { name: "admin", role: "ユーザー" });
+users.set("admin@gmail.com", { name: "admin", role: "アドミン" });
 var db = firebase.firestore();
 db.collection("accounts")
   .get()
@@ -87,7 +87,7 @@ const ListActions = (props) => {
   console.log(account_id);
   return (
   <div>
-    {users.get(account_id)?.role === "ユーザー" && <CreateButton label="追加" />}
+    {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <CreateButton label="追加" />}
     <ExportButton label="エクスポート" />
   </div>
 )};
@@ -148,8 +148,8 @@ export const EventList = () => {
           />
           <NameField label="参加者" />
           <ShowButton label="詳細" />
-          {users.get(account_id)?.role === "ユーザー" && <EditButton label="変更" />}
-          {users.get(account_id)?.role === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
+          {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <EditButton label="変更" />}
+          {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton label="削除" redirect={false} />}
           </Datagrid>
           <Pagination
               page={page}
@@ -187,8 +187,8 @@ export const EventList1 = (props) => {
         />
         <NameField label="参加者" />
         <ShowButton label="詳細" />
-        {users.get(account_id)?.role === "ユーザー" && <EditButton label="変更" />}
-        {users.get(account_id)?.role === "ユーザー" && <DeleteButton label="削除" redirect={false} />}
+        {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <EditButton label="変更" />}
+        {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton label="削除" redirect={false} />}
       </Datagrid>
     </List>
   </>
@@ -204,7 +204,7 @@ const ShowActionList = ({ basePath, data }) => {
         label="イベント一覧へ"
         icon={<ChevronLeft />}
       />
-      {users.get(account_id)?.role === "ユーザー" && <EditButton label="イベント更新" to="edit" /> }
+      {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <EditButton label="イベント更新" to="edit" /> }
     </TopToolbar>
   );
 };
@@ -263,14 +263,14 @@ const CreateToolbar = (props) => {
         }}
         submitOnEnter={true}
       />
-      <Button
+      {/* <Button
         variant="contained"
         color="secondary"
         startIcon={<DeleteIcon />}
         style={{ marginLeft: "10px" }}
       >
         キャンセル
-      </Button>
+      </Button> */}
     </Toolbar>
   );
 };

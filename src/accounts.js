@@ -37,7 +37,7 @@
 
   const roleList = [
     { id: "管理", name: "管理" },
-    { id: "アドミン", name: "アドミン" },
+    // { id: "アドミン", name: "アドミン" },
   ];
 
   const validateEmail = email();
@@ -121,14 +121,14 @@
   const CreateToolbar = (props) => (
     <Toolbar {...props}>
       <SaveButton label="追加" redirect="show" submitOnEnter={true} />
-      <Button
+      {/* <Button
         variant="contained"
         color="secondary"
         startIcon={<DeleteIcon />}
         style={{ marginLeft: "10px" }}
       >
         キャンセル
-      </Button>
+      </Button> */}
     </Toolbar>
   );
 
