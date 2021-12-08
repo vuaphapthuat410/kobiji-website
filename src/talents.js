@@ -13,6 +13,7 @@ import {
   SimpleForm,
   TextField,
   TextInput,
+  PasswordInput,
   ShowButton,
   EditButton,
   DeleteButton,
@@ -52,7 +53,8 @@ const countryList = [
   { id: "イギリス", name: "イギリス" },
 ];
 
-const validateEmail = email();
+const validateEmail = [required(), email()];
+const validatePasswd = [required(), minLength(8), maxLength(20)];
 const validateName = [required(), minLength(2), maxLength(64)];
 const validateBirthday = [required()];
 const validateGender = required();
@@ -68,7 +70,7 @@ const TalentFilter = (props) => (
 const ListActions = (props) => (
   <div>
     <CreateButton label="追加" />
-    <ExportButton label="エクスポート" />
+    {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
 
@@ -77,7 +79,7 @@ export const TalentList = (props) => (
     <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント管理</div>
     <List
       {...props}
-      filters={<TalentFilter />}
+      // filters={<TalentFilter />}
       actions={<ListActions />}
       title="タレント管理"
     >
@@ -159,7 +161,7 @@ export const TalentCreate = (props) => {
   const onSuccess = ({ data }) => {
     console.log(data.id)
     redirect(`/talents/${data.id}/show`);
-    auth.createUserWithEmailAndPassword(data.mailAddress,'hoanganh23')
+    auth.createUserWithEmailAndPassword(data.mailAddress, data.password)
   };
   return(
   <Create {...props} actions={<CreateActionList /> } onSuccess={onSuccess}>
@@ -167,6 +169,7 @@ export const TalentCreate = (props) => {
       {/* <TextInput source="id" label="ID" /> */}
       <TextInput source="name" label="名前" validate={validateName}/>
       <TextInput source="mailAddress" label="メールアドレス" validate={validateEmail}/>
+      <PasswordInput source="password" label="パスワード" validate={validatePasswd}/>
       <DateInput source="birthday" label="生年月日" validate={validateBirthday}/>
       <SelectInput source="gender" label="性別" choices={genderList} validate={validateGender}/>
       <SelectInput source="status" label="ステータス" choices={statusList} validate={validateStatus}/>

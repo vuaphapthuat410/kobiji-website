@@ -41,7 +41,8 @@ function Dashboard() {
     return(
         <Card>
         <CardHeader title="マイスケジュール" />
-        <CardContent>kobiji</CardContent>
+        {/* <CardContent>kobiji</CardContent> */}
+        <CardContent></CardContent>
         <Calendar
         culture = 'ja'
         localizer={localizer}

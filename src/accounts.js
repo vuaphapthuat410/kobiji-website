@@ -13,6 +13,7 @@
     SimpleForm,
     TextField,
     TextInput,
+    SearchInput,
     DateField,
     PasswordInput,
     ShowButton,
@@ -35,26 +36,28 @@
   import DeleteIcon from "@material-ui/icons/Delete";
   import Button from "@material-ui/core/Button";
 
+  const user = auth.currentUser;
+
   const roleList = [
     { id: "管理", name: "管理" },
-    // { id: "アドミン", name: "アドミン" },
+    { id: "アドミン", name: "アドミン" },
   ];
 
-  const validateEmail = email();
+  const validateEmail = [required(), email()];
   const validateName = [required(), minLength(2), maxLength(64)];
   const validateRole = required();
-  const validatePasswd = [required(), minLength(8), maxLength(200)]
+  const validatePasswd = [required(), minLength(8), maxLength(20)];
 
   const AccountFilter = (props) => (
     <Filter {...props}>
-      <TextInput label="検索" source="title" alwaysOn />
+      <SearchInput source="名前" alwaysOn />
     </Filter>
   );
 
   const ListActions = (props) => (
     <div>
       <CreateButton label="追加" />
-      <ExportButton label="エクスポート" />
+      {/* <ExportButton label="エクスポート" /> */}
     </div>
   );
 
@@ -63,7 +66,7 @@
       <div style={{ fontSize: "20px", fontWeight: "bold" }}>アカウント管理</div>
       <List
         {...props}
-        filters={<AccountFilter />}
+        // filters={<AccountFilter />}
         actions={<ListActions />}
         title="アカウント管理"
       >
@@ -135,8 +138,12 @@
   export const AccountCreate = (props) => {
     const redirect = useRedirect();
     const onSuccess = ({ data }) => {
-      redirect(`/accounts/${data.id}/show`);
       auth.createUserWithEmailAndPassword(data.mail, data.password)
+        .then( (data) =>{
+          console.log(data.user.uid);
+        })
+      auth.updateCurrentUser(user) // not run
+      redirect(`/accounts/${data.id}/show`);
     };
     return(
     <Create

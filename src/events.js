@@ -131,7 +131,7 @@ export const EventList = () => {
       <>
       <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
       <div> 
-      <EventFilter />
+      {/* <EventFilter /> */}
       <ListActions />
       </div>
           <Datagrid 
