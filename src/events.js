@@ -88,7 +88,6 @@ const ListActions = (props) => {
   return (
   <div>
     {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <CreateButton label="追加" />}
-    <ExportButton label="エクスポート" />
   </div>
 )};
 
@@ -130,6 +129,11 @@ export const EventList = () => {
   }
   return (
       <>
+      <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
+      <div> 
+      <EventFilter />
+      <ListActions />
+      </div>
           <Datagrid 
               data={keyBy(data1, 'id')}
               ids={data1.map(({ id }) => id)}
