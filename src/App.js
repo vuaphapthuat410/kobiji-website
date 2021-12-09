@@ -22,6 +22,8 @@ import { authProvider, dataProvider, auth } from "./firebase";
 function App() {
   // const dataProvider1 = useDataProvider();
   const [email, setEmail] = useState("");
+  const [user, setUser] = useState()
+  const [token, setToken] = useState()
   const [role, setRole] = useState()
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
@@ -43,6 +45,9 @@ function App() {
             setRole(2)
           }
         })
+        // setUser(user)
+        // localStorage.setItem('user_token', JSON.stringify(user))
+        // setToken(JSON.parse(localStorage.getItem('user_token')))
       }
     });
   }, [dataProvider]);

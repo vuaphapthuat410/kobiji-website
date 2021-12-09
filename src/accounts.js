@@ -35,15 +35,54 @@
   import ChevronLeft from "@material-ui/icons/ChevronLeft";
   import DeleteIcon from "@material-ui/icons/Delete";
   import Button from "@material-ui/core/Button";
+  import firebase from "firebase";
 
-  const user = auth.currentUser;
+  const user = firebase.auth().currentUser;
 
   const roleList = [
     { id: "管理", name: "管理" },
     { id: "アドミン", name: "アドミン" },
   ];
+  
+  // chữa cháy tạm thời 
+  var dupList = []
+  var db = firebase.firestore();
+  db.collection("accounts")
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        dupList.push(doc.data().mail)
+      });
+    });
+  db.collection("talents")
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        dupList.push(doc.data().mailAddress)
+      });
+    });
 
-  const validateEmail = [required(), email()];
+  const dupValidation = (value, allValues) => {
+    for (const dup of dupList) {
+      if (dup !== undefined && value === dup) {
+        return 'Duplicate email'; 
+      }
+      // console.log(dup)
+    }
+    return undefined;
+  };
+
+  // const dupValidation = (value, allValues) => {
+  //   return dupList.every( (dup) => {
+  //     if (dup !== undefined && value === dup) {
+  //       console.log("Dup " + value)
+  //       return 'Duplicate email'; 
+  //     }
+  //     return undefined;
+  //   })
+  // };
+
+  const validateEmail = [required(), email(), dupValidation];
   const validateName = [required(), minLength(2), maxLength(64)];
   const validateRole = required();
   const validatePasswd = [required(), minLength(8), maxLength(20)];
@@ -123,6 +162,7 @@
 
   const CreateToolbar = (props) => (
     <Toolbar {...props}>
+      {/* {user !== null && <SaveButton label="追加" redirect="show" submitOnEnter={true} />} */}
       <SaveButton label="追加" redirect="show" submitOnEnter={true} />
       {/* <Button
         variant="contained"
@@ -138,12 +178,13 @@
   export const AccountCreate = (props) => {
     const redirect = useRedirect();
     const onSuccess = ({ data }) => {
+      redirect(`/accounts/${data.id}/show`);
       auth.createUserWithEmailAndPassword(data.mail, data.password)
         .then( (data) =>{
           console.log(data.user.uid);
         })
-      auth.updateCurrentUser(user) // not run
-      redirect(`/accounts/${data.id}/show`);
+      // var user = JSON.parse(localStorage.getItem('user_token'))
+      // auth.updateCurrentUser(user) // not run
     };
     return(
     <Create

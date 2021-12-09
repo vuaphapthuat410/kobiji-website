@@ -35,6 +35,7 @@ import {
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
+import firebase from "firebase";
 
 const genderList = [
   { id: "女", name: "女" },
@@ -53,7 +54,35 @@ const countryList = [
   { id: "イギリス", name: "イギリス" },
 ];
 
-const validateEmail = [required(), email()];
+// chữa cháy tạm thời 
+var dupList = []
+var db = firebase.firestore();
+db.collection("accounts")
+  .get()
+  .then((snapshot) => {
+    snapshot.forEach((doc) => {
+      dupList.push(doc.data().mail)
+    });
+  });
+db.collection("talents")
+  .get()
+  .then((snapshot) => {
+    snapshot.forEach((doc) => {
+      dupList.push(doc.data().mailAddress)
+    });
+  });
+
+const dupValidation = (value, allValues) => {
+  for (const dup of dupList) {
+    if (dup !== undefined && value === dup) {
+      return 'Duplicate email'; 
+    }
+    // console.log(dup)
+  }
+  return undefined;
+};
+
+const validateEmail = [required(), email(), dupValidation];
 const validatePasswd = [required(), minLength(8), maxLength(20)];
 const validateName = [required(), minLength(2), maxLength(64)];
 const validateBirthday = [required()];
