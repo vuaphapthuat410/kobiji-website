@@ -28,7 +28,7 @@ const CustomLoginForm = props => (
       <p>admin123</p> */}
     </div>
     <LoginForm {...props} />
-    <ForgotPasswordButton {...props} />
+    {/* <ForgotPasswordButton {...props} /> */}
   </div>
 );
 
