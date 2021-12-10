@@ -121,7 +121,7 @@ export const AccountList = (props) => (
         />
         <ShowButton label="詳細" />
         <EditButton label="変更" />
-        <DeleteButton label="削除" redirect={false} />
+        <DeleteButton undoable={false} label="削除" redirect={false} />
       </Datagrid>
     </List>
   </>
