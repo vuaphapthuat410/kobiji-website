@@ -1,6 +1,6 @@
 // in src/User.js
 import * as React from "react";
-import {auth} from "./firebase"
+import { auth } from "./firebase";
 // tslint:disable-next-line:no-var-requires
 import {
   Datagrid,
@@ -54,28 +54,28 @@ const countryList = [
   { id: "イギリス", name: "イギリス" },
 ];
 
-// chữa cháy tạm thời 
-var dupList = []
+// chữa cháy tạm thời
+var dupList = [];
 var db = firebase.firestore();
 db.collection("accounts")
   .get()
   .then((snapshot) => {
     snapshot.forEach((doc) => {
-      dupList.push(doc.data().mail)
+      dupList.push(doc.data().mail);
     });
   });
 db.collection("talents")
   .get()
   .then((snapshot) => {
     snapshot.forEach((doc) => {
-      dupList.push(doc.data().mailAddress)
+      dupList.push(doc.data().mailAddress);
     });
   });
 
 const dupValidation = (value, allValues) => {
   for (const dup of dupList) {
     if (dup !== undefined && value === dup) {
-      return 'Duplicate email'; 
+      return "Duplicate email";
     }
     // console.log(dup)
   }
@@ -114,11 +114,16 @@ export const TalentList = (props) => (
     >
       <Datagrid>
         <TextField source="name" label="名前" />
-        <TextField source="mailAddress" label="メールアドレス"/>
+        <TextField source="mailAddress" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
         <TextField source="status" label="ステータス" />
         <TextField source="country" label="国籍" />
-        <DateField disabled showTime="false" source="createdate" label="作成日" />
+        <DateField
+          disabled
+          showTime="false"
+          source="createdate"
+          label="作成日"
+        />
         <ShowButton label="詳細" />
         <EditButton label="変更" />
         <DeleteButton label="削除" redirect={false} />
@@ -169,12 +174,12 @@ const CreateActionList = ({ basePath, data }) => (
 
 const CreateToolbar = (props) => {
   const onSuccess = ({ data }) => {
-    auth.createUserWithEmailAndPassword(data.mailAddress,'hoanganh23')
+    auth.createUserWithEmailAndPassword(data.mailAddress, "hoanganh23");
   };
-  return(
-  <Toolbar {...props}>
-    <SaveButton label="追加" redirect="show" submitOnEnter={true}/>
-    {/* <Button
+  return (
+    <Toolbar {...props}>
+      <SaveButton label="追加" redirect="show" submitOnEnter={true} />
+      {/* <Button
       variant="contained"
       color="secondary"
       startIcon={<DeleteIcon />}
@@ -182,30 +187,63 @@ const CreateToolbar = (props) => {
     >
       キャンセル
     </Button> */}
-  </Toolbar>
-)};
+    </Toolbar>
+  );
+};
 
 export const TalentCreate = (props) => {
   const redirect = useRedirect();
-  const onSuccess = ({ data }) => {
-    console.log(data.id)
-    redirect(`/talents/${data.id}/show`);
-    auth.createUserWithEmailAndPassword(data.mailAddress, data.password)
+  const user = auth.currentUser;
+  const onSuccess = async ({ data }) => {
+    await auth
+      .createUserWithEmailAndPassword(data.mail, data.password)
+      .then(async (newUser) => {
+        await auth.updateCurrentUser(user);
+        redirect(`/talents/`);
+      });
   };
-  return(
-  <Create {...props} actions={<CreateActionList /> } onSuccess={onSuccess}>
-    <SimpleForm toolbar={<CreateToolbar />}> 
-      {/* <TextInput source="id" label="ID" /> */}
-      <TextInput source="name" label="名前" validate={validateName}/>
-      <TextInput source="mailAddress" label="メールアドレス" validate={validateEmail}/>
-      <PasswordInput source="password" label="パスワード" validate={validatePasswd}/>
-      <DateInput source="birthday" label="生年月日" validate={validateBirthday}/>
-      <SelectInput source="gender" label="性別" choices={genderList} validate={validateGender}/>
-      <SelectInput source="status" label="ステータス" choices={statusList} validate={validateStatus}/>
-      <SelectInput source="country" label="国籍" choices={countryList} validate={validateCountry}/>
-    </SimpleForm>
-  </Create>
-)};
+  return (
+    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess}>
+      <SimpleForm toolbar={<CreateToolbar />}>
+        {/* <TextInput source="id" label="ID" /> */}
+        <TextInput source="name" label="名前" validate={validateName} />
+        <TextInput
+          source="mailAddress"
+          label="メールアドレス"
+          validate={validateEmail}
+        />
+        <PasswordInput
+          source="password"
+          label="パスワード"
+          validate={validatePasswd}
+        />
+        <DateInput
+          source="birthday"
+          label="生年月日"
+          validate={validateBirthday}
+        />
+        <SelectInput
+          source="gender"
+          label="性別"
+          choices={genderList}
+          validate={validateGender}
+        />
+        <SelectInput
+          source="status"
+          label="ステータス"
+          choices={statusList}
+          validate={validateStatus}
+        />
+        <SelectInput
+          source="country"
+          label="国籍"
+          choices={countryList}
+          validate={validateCountry}
+        />
+      </SimpleForm>
+    </Create>
+  );
+};
 
 const EditActionList = ({ basePath, data }) => (
   <TopToolbar>
@@ -222,12 +260,35 @@ export const TalentEdit = (props) => (
   <Edit {...props} actions={<EditActionList />}>
     <SimpleForm>
       {/* <TextInput source="id" label="ID" /> */}
-      <TextInput source="name" label="名前" validate={validateName}/>
-      <TextInput source="mailAddress" label="メールアドレス" validate={validateEmail}/>
-      <DateInput source="birthday" label="生年月日" validate={validateBirthday}/>
-      <SelectInput source="gender" label="性別" choices={genderList} validate={validateGender}/>
-      <SelectInput source="status" label="ステータス" choices={statusList} validate={validateStatus}/>
-      <SelectInput source="country" label="国籍" choices={countryList} validate={validateCountry}/>
+      <TextInput source="name" label="名前" validate={validateName} />
+      <TextInput
+        source="mailAddress"
+        label="メールアドレス"
+        validate={validateEmail}
+      />
+      <DateInput
+        source="birthday"
+        label="生年月日"
+        validate={validateBirthday}
+      />
+      <SelectInput
+        source="gender"
+        label="性別"
+        choices={genderList}
+        validate={validateGender}
+      />
+      <SelectInput
+        source="status"
+        label="ステータス"
+        choices={statusList}
+        validate={validateStatus}
+      />
+      <SelectInput
+        source="country"
+        label="国籍"
+        choices={countryList}
+        validate={validateCountry}
+      />
     </SimpleForm>
   </Edit>
 );
