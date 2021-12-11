@@ -108,6 +108,7 @@ export const AccountList = (props) => (
       // filters={<AccountFilter />}
       actions={<ListActions />}
       title="アカウント管理"
+      bulkActionButtons={false}
     >
       <Datagrid>
         <TextField source="name" label="名前" />

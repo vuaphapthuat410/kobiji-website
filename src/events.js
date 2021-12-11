@@ -153,7 +153,7 @@ export const EventList = () => {
           <NameField label="参加者" />
           <ShowButton label="詳細" />
           {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <EditButton label="変更" />}
-          {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton label="削除" redirect={false} />}
+          {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton undoable={false} label="削除" redirect={false} />}
           </Datagrid>
           <Pagination
               page={page}
@@ -192,7 +192,7 @@ export const EventList1 = (props) => {
         <NameField label="参加者" />
         <ShowButton label="詳細" />
         {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <EditButton label="変更" />}
-        {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton label="削除" redirect={false} />}
+        {(users.get(account_id)?.role === "アドミン" || users.get(account_id)?.role === "管理") && <DeleteButton undoable={false} label="削除" redirect={false} />}
       </Datagrid>
     </List>
   </>

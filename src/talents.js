@@ -111,6 +111,7 @@ export const TalentList = (props) => (
       // filters={<TalentFilter />}
       actions={<ListActions />}
       title="タレント管理"
+      bulkActionButtons={false}
     >
       <Datagrid>
         <TextField source="name" label="名前" />
