@@ -1,5 +1,4 @@
-import firebase from "firebase";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { auth, dataProvider } from "./firebase";
 
 export default function useContext() {

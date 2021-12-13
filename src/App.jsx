@@ -1,7 +1,7 @@
 import EventIcon from "@material-ui/icons/Event";
 import UserIcon from "@material-ui/icons/Group";
-import React from "react";
-import { Admin, Loading, Resource } from "react-admin";
+import React, { useEffect, useState } from "react";
+import { Admin, Resource } from "react-admin";
 import AccountCreate from "./components/Accounts/AccountCreate";
 import AccountEdit from "./components/Accounts/AccountEdit";
 import AccountList from "./components/Accounts/AccountList";
@@ -17,16 +17,29 @@ import TalentCreate from "./components/Talents/TalentCreate";
 import TalentEdit from "./components/Talents/TalentEdit";
 import TalentList from "./components/Talents/TalentList";
 import TalentShow from "./components/Talents/TalentShow";
-import { authProvider, dataProvider } from "./db/firebase";
-import useContext from "./db/useContext";
-
-
-
+import { auth, authProvider, dataProvider } from "./db/firebase";
 
 function App() {
-  const [{ currentUser }, loading] = useContext();
+  const [currentUser, setCurrentuser] = useState({
+    role: "",
+  });
 
-  if (loading) return Loading;
+  useEffect(() => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        dataProvider
+          .getList("accounts", {
+            pagination: { page: 1, perPage: 1000 },
+            filter: {},
+          })
+          .then(({ data }) => {
+            const index = data.findIndex((value) => value.mail === user.email);
+            const _currentUser = { ...data[index], ...user };
+            setCurrentuser(_currentUser);
+          });
+      }
+    });
+  }, [dataProvider]);
 
   if (currentUser.role === "アドミン") {
     return (
@@ -75,7 +88,7 @@ function App() {
           create={TalentCreate}
           edit={TalentEdit}
           options={{
-            label: "Talents"
+            label: "Talents",
           }}
         />
 
