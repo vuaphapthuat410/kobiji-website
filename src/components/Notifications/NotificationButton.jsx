@@ -1,16 +1,17 @@
-import * as React from "react";
-import { useDataProvider, useMutation, Loading, } from "react-admin";
-import { auth } from "./firebase";
-import { Notifications, RemoveCircle, Check } from "@material-ui/icons";
 import {
   Box,
+  Divider,
   IconButton,
-  Menu,
   List,
   ListItem,
   ListItemText,
-  Divider,
+  Menu
 } from "@material-ui/core";
+import { Check, Notifications, RemoveCircle } from "@material-ui/icons";
+import * as React from "react";
+import { Loading, useDataProvider, useMutation } from "react-admin";
+import useContext from "../../db/useContext";
+import { auth } from "../../db/firebase";
 
 const ReadButton = ({ record, member, notifs, setNotifs }) => {
   let members_read = { ...record.members_read };
@@ -29,7 +30,7 @@ const ReadButton = ({ record, member, notifs, setNotifs }) => {
       {loaded ? (
         <Check fontSize="inherit" />
       ) : (
-        <RemoveCircle fontSize="inherit" color="primary"/>
+        <RemoveCircle fontSize="inherit" color="primary" />
       )}
     </IconButton>
   );
@@ -39,9 +40,11 @@ const ReadButton = ({ record, member, notifs, setNotifs }) => {
 
 const NotificationList = () => {
   const dataProvider = useDataProvider();
-  const [notifs, setNotifs] = React.useState();
+  const [notifs, setNotifs] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
   const account_id = auth.currentUser?.email ?? "";
+
+  const [{ currentUser }, loading2] = useContext();
 
   React.useEffect(() => {
     dataProvider
@@ -50,18 +53,42 @@ const NotificationList = () => {
         filter: {},
       })
       .then(({ data }) => {
-        let newData = data.filter(
-          (notif) =>
-            notif.members_read !== undefined &&
-            notif.members_read[account_id] !== undefined
-        );
-        setNotifs(newData);
-        setLoading(false);
+        if (currentUser.role === "タレント") {
+          data = data.filter((event) =>
+            event.members.some((member) => member === account_id)
+          );
+        } else if (currentUser.role === "管理") {
+          data = data.filter((event) => event.createdby === account_id);
+        }
+        if (!loading2) {
+          setNotifs(data);
+          setLoading(false);
+        }
       })
       .catch((error) => {
         setLoading(false);
       });
-  }, [dataProvider, account_id]);
+  }, [dataProvider, account_id, currentUser, loading2]);
+
+  // React.useEffect(() => {
+  //   const eventsRef = firebase.database().ref("events");
+  //   const valueListener = eventsRef.on("value", (snapshot) => {
+  //     const data = snapshot.val();
+  //     const events = [
+  //       {
+  //         hello: "hello",
+  //       },
+  //     ];
+  //     // const events = Object.values(data)
+
+  //     console.log("qwer", data);
+  //     console.log("events", events);
+  //     setNotifs(events);
+  //     setLoading(false);
+  //   });
+
+  //   return () => eventsRef.off("value", valueListener);
+  // }, []);
 
   if (loading) return <Loading />;
   if (!notifs || !notifs[0])

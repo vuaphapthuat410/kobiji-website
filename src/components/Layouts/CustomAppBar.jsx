@@ -2,8 +2,8 @@ import * as React from "react";
 import { Fragment } from "react";
 import { AppBar } from "react-admin";
 import { Box } from "@material-ui/core";
-import NotificationButton from "./notificationButton";
-import Info from "./infoHeader"
+import Info from "./infoHeader";
+import NotificationButton from "../Notifications/NotificationButton";
 
 const CustomAppBar = (props) => (
   <AppBar {...props} container={Fragment}>
