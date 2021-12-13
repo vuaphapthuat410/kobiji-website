@@ -9,9 +9,9 @@ import {
 } from "@material-ui/core";
 import { Check, Notifications, RemoveCircle } from "@material-ui/icons";
 import * as React from "react";
-import { Loading, useDataProvider, useMutation } from "react-admin";
+import { Loading, useMutation } from "react-admin";
+import firebase, { auth } from "../../db/firebase";
 import useContext from "../../db/useContext";
-import { auth } from "../../db/firebase";
 
 const ReadButton = ({ record, member, notifs, setNotifs }) => {
   let members_read = { ...record.members_read };
@@ -39,56 +39,44 @@ const ReadButton = ({ record, member, notifs, setNotifs }) => {
 };
 
 const NotificationList = () => {
-  const dataProvider = useDataProvider();
   const [notifs, setNotifs] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
   const account_id = auth.currentUser?.email ?? "";
 
-  const [{ currentUser }, loading2] = useContext();
+  const [{ currentUser }, loading] = useContext();
+
+
+  var unsubscribe = firebase
+    .firestore()
+    .collection("events")
+    .onSnapshot(() => {});
 
   React.useEffect(() => {
-    dataProvider
-      .getList("events", {
-        pagination: { page: 1, perPage: 100 },
-        filter: {},
-      })
-      .then(({ data }) => {
-        if (currentUser.role === "タレント") {
-          data = data.filter((event) =>
-            event.members.some((member) => member === account_id)
-          );
-        } else if (currentUser.role === "管理") {
-          data = data.filter((event) => event.createdby === account_id);
+    firebase
+      .firestore()
+      .collection("events")
+      .onSnapshot((querySnapshot) => {
+        var events = [];
+        querySnapshot.forEach((doc) => {
+          events.push({...doc.data(), id: doc.id});
+        });
+
+        if (currentUser) {
+          if (currentUser.role === "タレント") {
+            events = events.filter((event) =>
+              event.members.some((member) => member === account_id)
+            );
+          } else if (currentUser.role === "管理") {
+            events = events.filter((event) => event.createdby === account_id);
+          }
         }
-        if (!loading2) {
-          setNotifs(data);
-          setLoading(false);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
+
+        setNotifs(events);
+        // console.log("Currentevents: ", events);
       });
-  }, [dataProvider, account_id, currentUser, loading2]);
-
-  // React.useEffect(() => {
-  //   const eventsRef = firebase.database().ref("events");
-  //   const valueListener = eventsRef.on("value", (snapshot) => {
-  //     const data = snapshot.val();
-  //     const events = [
-  //       {
-  //         hello: "hello",
-  //       },
-  //     ];
-  //     // const events = Object.values(data)
-
-  //     console.log("qwer", data);
-  //     console.log("events", events);
-  //     setNotifs(events);
-  //     setLoading(false);
-  //   });
-
-  //   return () => eventsRef.off("value", valueListener);
-  // }, []);
+    return () => {
+      unsubscribe();
+    };
+  }, [currentUser]);
 
   if (loading) return <Loading />;
   if (!notifs || !notifs[0])
@@ -124,7 +112,7 @@ const NotificationList = () => {
                   fontWeight: read ? "normal" : "bold",
                 }}
               >
-                {notif.date.toDateString()} - イベントに招待されました。
+                {new Date(notif.date.seconds).toDateString()} - イベントに招待されました。
                 {read ? (
                   <Check fontSize="inherit" />
                 ) : (

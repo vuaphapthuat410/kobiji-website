@@ -16,16 +16,14 @@ db.collection("accounts")
   });
 
 const Info = () => {
-  var eventsRef = firebase.database().ref("events");
-  let data = null;
-  eventsRef.on("value", (snapshot) => {
-    data = snapshot.val();
-    console.log(data);
-  });
+
   let account_id = auth.currentUser?.email ?? "";
+
+  
+
   return (
     <>
-      {users.get(account_id)?.name} - {users.get(account_id)?.role} 
+      {users.get(account_id)?.name} - {users.get(account_id)?.role}
     </>
   );
 };

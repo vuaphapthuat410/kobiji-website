@@ -18,7 +18,7 @@ import { auth } from "../../db/firebase";
 import NameField from "../Layouts/NameField";
 
 const ListActions = (props) => {
-  console.log("useruse", props.user);
+  // console.log("useruse", props.user);
   return (
     <div>
       {( props.user.role === "管理") && (

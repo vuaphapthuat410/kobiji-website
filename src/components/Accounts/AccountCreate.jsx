@@ -1,26 +1,18 @@
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import React, { useState } from "react";
 import {
-  Create, DateInput, ListButton, Loading, PasswordInput, SaveButton,
+  Create, ListButton, Loading, PasswordInput, SaveButton,
   SelectInput, SimpleForm,
   TextInput, Toolbar, TopToolbar, useDataProvider, useMutation, useRedirect
 } from "react-admin";
 import { auth } from "../../db/firebase";
 import {
-  countryList,
-  genderList,
-  roleList,
-  statusList
+  roleList
 } from "../../utils/list";
 import {
-  validateBirthday,
-  validateCountry,
-  validateEmail,
-  validateGender,
-  validateName,
+  validateEmail, validateName,
   validatePasswd,
-  validateRole,
-  validateStatus
+  validateRole
 } from "../../utils/validate";
 
 

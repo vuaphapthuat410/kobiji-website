@@ -42,7 +42,6 @@ function Dashboard() {
             id: e.id,
           };
         });
-        console.log("newData", data);
         if (!loading2) {
           setEvents(data);
           setLoading(false);

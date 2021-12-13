@@ -19,11 +19,11 @@ export default function useContext() {
           .then(({ data }) => {
             const index = data.findIndex((value) => value.mail === user.email);
             _currentUser = { ...data[index], ...user };
-            console.log("_currentuserne", _currentUser, data);
+            // console.log("_currentuserne", _currentUser, data);
 
             setCurrentUser(_currentUser);
             setUsers(data);
-            console.log("setloading false");
+            // console.log("setloading false");
             setLoading(false);
           });
       }
