@@ -4,10 +4,8 @@ import {
   AutocompleteArrayInput,
   DateInput,
   Edit,
-  ListButton,
-  SelectInput, SimpleForm,
-  TextInput,
-  TopToolbar
+  ListButton, SaveButton, SelectInput, SimpleForm,
+  TextInput, Toolbar, TopToolbar
 } from "react-admin";
 import useContext from "../../db/useContext";
 import { validateRequired, validateTitle } from "../../utils/validate";
@@ -28,6 +26,25 @@ function userChoices(users) {
     return { id: user.mail, name: `(${user.role}) ${user.name} - ${user.mail}` };
   });
 }
+
+const CreateToolbar = (props) => {
+  return (
+    <Toolbar {...props}>
+      <SaveButton
+        label="変更"
+        redirect="show"
+        transform={(data) => {
+          data.date = new Date(data.date);
+          return data;
+        }}
+        submitOnEnter={true}
+      />
+    </Toolbar>
+  );
+};
+
+
+
 const EventEdit = (props) => {
   const [{ users }, loading] = useContext();
 
@@ -48,7 +65,7 @@ const EventEdit = (props) => {
         return data;
       }}
     >
-      <SimpleForm>
+      <SimpleForm toolbar={<CreateToolbar />}>
         <TextInput source="title" label="名前" validate={validateTitle} />
         <TextInput
           source="description"

@@ -5,15 +5,20 @@ import {
   Datagrid,
   DateField,
   DeleteButton,
-  EditButton, Loading, Pagination, ShowButton,
-  TextField, useQuery
+  EditButton,
+  Loading,
+  Pagination,
+  ShowButton,
+  TextField,
+  useQuery
 } from "react-admin";
 import { auth } from "../../db/firebase";
 
-
 const ListActions = (props) => (
   <div>
-    <CreateButton label="追加" />
+    <div style={{ float: "right", marginBottom: "30px" }}>
+      <CreateButton label="追加" />
+    </div>
     {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
@@ -59,7 +64,7 @@ const TalentList = (props) => {
         setSort={(field, order) => setSort({ field, order })}
       >
         <TextField source="name" label="名前" />
-        <TextField source="mailAddress" label="メールアドレス" />
+        <TextField source="mail" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
         <TextField source="status" label="ステータス" />
         <TextField source="country" label="国籍" />

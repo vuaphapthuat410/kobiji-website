@@ -1,32 +1,23 @@
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
 import React, { useEffect, useState } from "react";
 import {
-  Edit,
-  SimpleForm,
-  TextInput,
-  ShowButton,
-  TopToolbar,
-  ListButton,
-  SelectInput,
-  DateInput,
-  useEditController,
+  DateInput, Edit, ListButton, SaveButton, SelectInput, SimpleForm,
+  TextInput, Toolbar, TopToolbar, useEditController
 } from "react-admin";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
-
-import {
-  validateBirthday,
-  validateCountry,
-  validateEmail,
-  validateGender,
-  validateName,
-  validateRole,
-  validateStatus,
-} from "../../utils/validate";
 import {
   countryList,
   genderList,
   roleList,
-  statusList,
+  statusList
 } from "../../utils/list";
+import {
+  validateBirthday,
+  validateCountry, validateGender,
+  validateName,
+  validateRole,
+  validateStatus
+} from "../../utils/validate";
+
 
 const EditActionList = ({ basePath, data }) => (
   <TopToolbar>
@@ -39,6 +30,21 @@ const EditActionList = ({ basePath, data }) => (
   </TopToolbar>
 );
 
+const CreateToolbar = (props) => {
+  return (
+    <Toolbar {...props}>
+      <SaveButton
+        label="変更"
+        redirect="show"
+        transform={(data) => {
+          return data;
+        }}
+        submitOnEnter={true}
+      />
+    </Toolbar>
+  );
+};
+
 const AccountEdit = (props) => {
   const [selectedRole, setSeletedRole] = useState(null);
   const controllerProps = useEditController(props);
@@ -50,13 +56,9 @@ const AccountEdit = (props) => {
   }, []);
   return (
     <Edit {...props} actions={<EditActionList />}>
-      <SimpleForm>
+      <SimpleForm toolbar={<CreateToolbar />}>
         <TextInput source="name" label="名前" validate={validateName} />
-        <TextInput
-          source="mail"
-          label="メールアドレス"
-          validate={validateEmail}
-        />
+        <TextInput source="mail" label="メールアドレス" disabled />
         <SelectInput
           source="role"
           label="役割"

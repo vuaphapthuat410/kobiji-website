@@ -10,9 +10,9 @@ import { auth } from "../../db/firebase";
 
 const localizer = momentLocalizer(moment);
 function Dashboard() {
+  const [loading, setLoading] = React.useState(true);
   const dataProvider = useDataProvider();
   const [events, setEvents] = React.useState();
-  const [loading, setLoading] = React.useState(true);
   const account_id = auth.currentUser?.email ?? "";
   const redirect = useRedirect();
   const [{ currentUser }, loading2] = useContext();
@@ -48,6 +48,7 @@ function Dashboard() {
         }
       })
       .catch((error) => {
+        console.log("errornee", error)
         // setLoading(false);
       });
   }, [dataProvider, account_id, currentUser, loading2]);
@@ -74,10 +75,10 @@ function Dashboard() {
           week: "週",
           day: "日",
           showMore: (total) => `${total}もっと見せる`,
-          agenda: "議題",
+          agenda: "アジェンダ",
         }}
         onSelectEvent={(e) => {
-          redirect(`events/${e.id}`);
+          redirect(`events/${e.id}/show`);
         }}
       />
     </Card>

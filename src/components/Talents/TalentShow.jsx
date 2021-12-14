@@ -31,7 +31,7 @@ const TalentShow = (props) => {
       <SimpleShowLayout>
         <TextField source="createdby" label="管理者：" />
         <TextField source="name" label="名前" />
-        <TextField source="mailAddress" label="メールアドレス" />
+        <TextField source="mail" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
         <TextField source="gender" label="セックス" />
         <TextField source="status" label="ステータス" />

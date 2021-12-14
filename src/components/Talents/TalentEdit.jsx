@@ -3,21 +3,15 @@ import React from "react";
 import {
   DateInput,
   Edit,
-  ListButton,
-  SelectInput,
-  ShowButton,
-  SimpleForm,
-  TextInput,
-  TopToolbar,
+  ListButton, SaveButton, SelectInput, SimpleForm,
+  TextInput, Toolbar, TopToolbar
 } from "react-admin";
 import { countryList, genderList, statusList } from "../../utils/list";
 import {
   validateBirthday,
-  validateCountry,
-  validateEmail,
-  validateGender,
+  validateCountry, validateGender,
   validateName,
-  validateStatus,
+  validateStatus
 } from "../../utils/validate";
 const EditActionList = ({ basePath, data }) => (
   <TopToolbar>
@@ -29,15 +23,31 @@ const EditActionList = ({ basePath, data }) => (
     {/* <ShowButton label="タレント詳細へ" to="show"></ShowButton> */}
   </TopToolbar>
 );
+
+const CreateToolbar = (props) => {
+  return (
+    <Toolbar {...props}>
+      <SaveButton
+        label="変更"
+        redirect="show"
+        transform={(data) => {
+          return data;
+        }}
+        submitOnEnter={true}
+      />
+    </Toolbar>
+  );
+};
+
 const TalentEdit = (props) => (
   <Edit {...props} actions={<EditActionList />}>
-    <SimpleForm>
+    <SimpleForm toolbar={<CreateToolbar />}>
       {/* <TextInput source="id" label="ID" /> */}
       <TextInput source="name" label="名前" validate={validateName} />
       <TextInput
-        source="mailAddress"
+        source="mail"
         label="メールアドレス"
-        validate={validateEmail}
+        disabled
       />
       <DateInput
         source="birthday"

@@ -54,17 +54,6 @@ const CreateToolbar = (props) => {
 const EventCreate = (props) => {
   const redirect = useRedirect();
   const onSuccess = ({ data }) => {
-    const { active, date, description, members, members_read } = data;
-    console.log("databe", data);
-    firebase
-      .database()
-      .ref("events/" + data.id)
-      .set({
-        active,
-        date,
-        description,
-        members,
-      });
     redirect(`/events/${data.id}/show`);
   };
   const [{ users }, loading] = useContext();

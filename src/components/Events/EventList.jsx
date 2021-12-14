@@ -11,7 +11,7 @@ import {
   Pagination,
   ShowButton,
   TextField,
-  useQuery
+  useQuery,
 } from "react-admin";
 import useContext from "../../db/useContext";
 import { auth } from "../../db/firebase";
@@ -21,8 +21,10 @@ const ListActions = (props) => {
   // console.log("useruse", props.user);
   return (
     <div>
-      {( props.user.role === "管理") && (
-        <CreateButton label="追加" />
+      {props.user.role === "管理" && (
+        <div style={{ float: "right", marginBottom:"30px" }}>
+          <CreateButton label="追加" />
+        </div>
       )}
     </div>
   );
@@ -48,7 +50,7 @@ const EventList = (props) => {
     },
   });
 
-  const [{  currentUser }, loading] = useContext();
+  const [{ currentUser }, loading] = useContext();
 
   if (loading || eLoading) {
     return <Loading />;
