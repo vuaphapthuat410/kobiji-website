@@ -7,7 +7,7 @@ import {
   ShowButton,
   EditButton,
   DeleteButton,
-  CreateButton,
+  CreateButton,useRefresh
 } from "react-admin";
 const ListActions = (props) => (
   <div>
@@ -17,8 +17,10 @@ const ListActions = (props) => (
 );
 
 const AccountList = (props) => {
+  const reFresh =useRefresh()
   const onSuccess = async ({ data }) => {
     // ToDo: Delete user in firebase auth
+    reFresh()
   };
   return (
     <>
@@ -42,7 +44,7 @@ const AccountList = (props) => {
           />
           <ShowButton label="詳細" />
           <EditButton label="変更" />
-          <DeleteButton label="削除" undoable={false} redirect={false} onSuccess={onSuccess} />
+          <DeleteButton label="削除" undoable={false} onSuccess={onSuccess} />
         </Datagrid>
       </List>
     </>
