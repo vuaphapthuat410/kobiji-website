@@ -36,15 +36,15 @@ const ListActions = (props) => {
 
 const eventFilters = [
   <SearchInput source="title" alwaysOn />,
-  <ReferenceInput
-    source="title"
-    label="タイトル"
-    reference="events"
-    allowEmpty
-    alwaysOn
-  >
-    <SelectInput optionText="title" />
-  </ReferenceInput>,
+  // <ReferenceInput
+  //   source="title"
+  //   label="タイトル"
+  //   reference="events"
+  //   allowEmpty
+  //   alwaysOn
+  // >
+  //   <SelectInput optionText="title" />
+  // </ReferenceInput>,
 ];
 
 const EventList = (props) => {
