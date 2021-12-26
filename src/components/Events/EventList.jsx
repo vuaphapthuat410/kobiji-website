@@ -12,6 +12,10 @@ import {
   ShowButton,
   TextField,
   useQuery,
+  ReferenceInput,
+  SelectInput,
+  SearchInput,
+  List,
 } from "react-admin";
 import useContext from "../../db/useContext";
 import { auth } from "../../db/firebase";
@@ -22,13 +26,26 @@ const ListActions = (props) => {
   return (
     <div>
       {props.user.role === "管理" && (
-        <div style={{ float: "right", marginBottom:"30px" }}>
+        <div style={{ float: "right", marginBottom: "30px" }}>
           <CreateButton label="追加" />
         </div>
       )}
     </div>
   );
 };
+
+const eventFilters = [
+  <SearchInput source="title" alwaysOn />,
+  // <ReferenceInput
+  //   source="title"
+  //   label="タイトル"
+  //   reference="events"
+  //   allowEmpty
+  //   alwaysOn
+  // >
+  //   <SelectInput optionText="title" />
+  // </ReferenceInput>,
+];
 
 const EventList = (props) => {
   const [page, setPage] = useState(1);
@@ -79,29 +96,31 @@ const EventList = (props) => {
         <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
         <ListActions user={currentUser} />
 
-        <Datagrid
-          data={keyBy(filterdEvents, "id")}
-          ids={filterdEvents.map(({ id }) => id)}
-          currentSort={sort}
-          setSort={(field, order) => setSort({ field, order })}
-        >
-          <TextField source="title" label="タイトル" />
-          <TextField source="description" label="内容" />
-          <BooleanField source="active" label="開催する" />
-          <DateField
-            disabled
-            locales="ja-JP"
-            options={{ dateStyle: "long" }}
-            source="date"
-            label="日時"
-          />
-          <NameField label="参加者" />
-          <ShowButton label="詳細" />
-          {currentUser.role === "管理" && <EditButton label="変更" />}
-          {currentUser.role === "管理" && (
-            <DeleteButton undoable={false} label="削除" redirect={false} />
-          )}
-        </Datagrid>
+        <List filters={eventFilters} basePath="/events">
+          <Datagrid
+            data={keyBy(filterdEvents, "id")}
+            ids={filterdEvents.map(({ id }) => id)}
+            currentSort={sort}
+            setSort={(field, order) => setSort({ field, order })}
+          >
+            <TextField source="title" label="タイトル" />
+            <TextField source="description" label="内容" />
+            <BooleanField source="active" label="開催する" />
+            <DateField
+              disabled
+              locales="ja-JP"
+              options={{ dateStyle: "long" }}
+              source="date"
+              label="日時"
+            />
+            <NameField label="参加者" />
+            <ShowButton label="詳細" />
+            {currentUser.role === "管理" && <EditButton label="変更" />}
+            {currentUser.role === "管理" && (
+              <DeleteButton undoable={false} label="削除" redirect={false} />
+            )}
+          </Datagrid>
+        </List>
         <Pagination
           page={page}
           setPage={setPage}
