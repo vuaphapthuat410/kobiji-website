@@ -5,6 +5,7 @@ import {
   TextField,
   DateField,
   ShowButton,
+  TextInput,
   EditButton,
   DeleteButton,
   CreateButton,useRefresh
@@ -15,7 +16,10 @@ const ListActions = (props) => (
     {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
-
+const accountFilters = [
+  <TextInput label="name" source="name" alwaysOn />,
+  <TextInput label="mail" source="mail" alwaysOn />,
+];
 const AccountList = (props) => {
   const reFresh =useRefresh()
   const onSuccess = async ({ data }) => {
@@ -27,7 +31,7 @@ const AccountList = (props) => {
       <div style={{ fontSize: "20px", fontWeight: "bold" }}>アカウント管理</div>
       <List
         {...props}
-        // filters={<AccountFilter />}
+        filters={accountFilters}
         actions={<ListActions />}
         title="アカウント管理"
         bulkActionButtons={false}
