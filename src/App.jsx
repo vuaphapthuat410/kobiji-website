@@ -1,6 +1,7 @@
 import EventIcon from "@material-ui/icons/Event";
 import UserIcon from "@material-ui/icons/Group";
 import React, { useEffect, useState } from "react";
+import { Route } from "react-router";
 import { Admin, Resource } from "react-admin";
 import AccountCreate from "./components/Accounts/AccountCreate";
 import AccountEdit from "./components/Accounts/AccountEdit";
@@ -17,7 +18,12 @@ import TalentCreate from "./components/Talents/TalentCreate";
 import TalentEdit from "./components/Talents/TalentEdit";
 import TalentList from "./components/Talents/TalentList";
 import TalentShow from "./components/Talents/TalentShow";
-import { auth, authProvider, dataProvider } from "./db/firebase";
+// import { auth, authProvider, dataProvider } from "./db/firebase";
+// Extending Data Provider
+import dataProvider from "./db/dataProvider";
+import { auth, authProvider } from "./db/firebase";
+import { ProfileEdit } from "./components/Profile/profile";
+import { PasswdChange } from "./components/Profile/changepasswd";
 
 function App() {
   const [currentUser, setCurrentuser] = useState({
@@ -49,6 +55,18 @@ function App() {
         dataProvider={dataProvider}
         authProvider={authProvider}
         loginPage={CustomLoginPage}
+        customRoutes={[
+          <Route
+            key="my-profile"
+            path="/my-profile"
+            render={() => <ProfileEdit />}
+          />, 
+          <Route
+            key="passwd-change"
+            path="/passwd-change"
+            render={() => <PasswdChange />}
+          />
+        ]}
       >
         <Resource
           name="accounts"
@@ -79,6 +97,18 @@ function App() {
         dataProvider={dataProvider}
         authProvider={authProvider}
         loginPage={CustomLoginPage}
+        customRoutes={[
+          <Route
+            key="my-profile"
+            path="/my-profile"
+            render={() => <ProfileEdit />}
+          />, 
+          <Route
+            key="passwd-change"
+            path="/passwd-change"
+            render={() => <PasswdChange />}
+          />
+        ]}
       >
         <Resource
           name="accounts"
@@ -111,6 +141,18 @@ function App() {
       dataProvider={dataProvider}
       authProvider={authProvider}
       loginPage={CustomLoginPage}
+      customRoutes={[
+        <Route
+          key="my-profile"
+          path="/my-profile"
+          render={() => <ProfileEdit />}
+        />, 
+        <Route
+          key="passwd-change"
+          path="/passwd-change"
+          render={() => <PasswdChange />}
+        />
+      ]}
     >
       <Resource
         name="events"

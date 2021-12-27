@@ -10,7 +10,10 @@ import {
   Pagination,
   ShowButton,
   TextField,
-  useQuery
+  useQuery,
+  ExportButton,
+  TextInput,
+  SimpleForm,
 } from "react-admin";
 import { auth } from "../../db/firebase";
 
@@ -19,6 +22,7 @@ const ListActions = (props) => (
     <div style={{ float: "right", marginBottom: "30px" }}>
       <CreateButton label="追加" />
     </div>
+    
     {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
@@ -52,6 +56,10 @@ const TalentList = (props) => {
   const talents = users.filter(
     (user) => user.createdby === auth.currentUser.email
   );
+  
+  const handleSearch = () => {
+    
+  };
 
   return (
     <>
