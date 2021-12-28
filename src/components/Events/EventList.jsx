@@ -94,9 +94,13 @@ const EventList = (props) => {
     events && (
       <>
         <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
-        <ListActions user={currentUser} />
-
-        <List filters={eventFilters} basePath="/events">
+        <List 
+          {...props}
+          filters={eventFilters} 
+          basePath="/events" 
+          actions={<ListActions user={currentUser} />}
+          bulkActionButtons={false}
+        >
           <Datagrid
             data={keyBy(filterdEvents, "id")}
             ids={filterdEvents.map(({ id }) => id)}
@@ -121,13 +125,13 @@ const EventList = (props) => {
             )}
           </Datagrid>
         </List>
-        <Pagination
+        {/* <Pagination
           page={page}
           setPage={setPage}
           perPage={perPage}
           setPerPage={setPerPage}
           total={total}
-        />
+        /> */}
       </>
     )
   );
