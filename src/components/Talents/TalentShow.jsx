@@ -33,9 +33,11 @@ const TalentShow = (props) => {
         <TextField source="name" label="名前" />
         <TextField source="mail" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
-        <TextField source="gender" label="セックス" />
+        <TextField source="gender" label="性別" />
         <TextField source="status" label="ステータス" />
+        <TextField source="phone" label="電話番号" />
         <TextField source="country" label="国籍" />
+        <TextField source="self-introduction" label="自己紹介" />
       </SimpleShowLayout>
     </Show>
   </>
