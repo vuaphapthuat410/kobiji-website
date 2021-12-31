@@ -30,6 +30,23 @@ function App() {
     role: "",
   });
 
+  const  simpleStringify = (object)=>{
+    var simpleObject = {};
+    for (var prop in object ){
+        if (!object.hasOwnProperty(prop)){
+            continue;
+        }
+        if (typeof(object[prop]) == 'object'){
+            continue;
+        }
+        if (typeof(object[prop]) == 'function'){
+            continue;
+        }
+        simpleObject[prop] = object[prop];
+    }
+    return JSON.stringify(simpleObject); // returns cleaned up JSON
+};
+
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
@@ -42,7 +59,11 @@ function App() {
             const index = data.findIndex((value) => value.mail === user.email);
             const _currentUser = { ...data[index], ...user };
             setCurrentuser(_currentUser);
+            console.log("cureent user", _currentUser);
+            window.localStorage.setItem("currentUser", simpleStringify(_currentUser));
           });
+      } else {
+        window.localStorage.setItem("currentUser", "");
       }
     });
   }, [dataProvider]);
@@ -60,12 +81,12 @@ function App() {
             key="my-profile"
             path="/my-profile"
             render={() => <ProfileEdit />}
-          />, 
+          />,
           <Route
             key="passwd-change"
             path="/passwd-change"
             render={() => <PasswdChange />}
-          />
+          />,
         ]}
       >
         <Resource
@@ -102,12 +123,12 @@ function App() {
             key="my-profile"
             path="/my-profile"
             render={() => <ProfileEdit />}
-          />, 
+          />,
           <Route
             key="passwd-change"
             path="/passwd-change"
             render={() => <PasswdChange />}
-          />
+          />,
         ]}
       >
         <Resource
@@ -117,6 +138,51 @@ function App() {
           show={TalentShow}
           create={TalentCreate}
           edit={TalentEdit}
+          options={{
+            label: "Talents",
+          }}
+        />
+
+        <Resource
+          name="events"
+          icon={EventIcon}
+          list={EventList}
+          create={EventCreate}
+          show={EventShow}
+          edit={EventEdit}
+        />
+      </Admin>
+    );
+  }
+
+  if (currentUser.role === "クライアント") {
+    return (
+      <Admin
+        layout={CustomLayout}
+        dashboard={Dashboard}
+        dataProvider={dataProvider}
+        authProvider={authProvider}
+        loginPage={CustomLoginPage}
+        customRoutes={[
+          <Route
+            key="my-profile"
+            path="/my-profile"
+            render={() => <ProfileEdit />}
+          />,
+          <Route
+            key="passwd-change"
+            path="/passwd-change"
+            render={() => <PasswdChange />}
+          />,
+        ]}
+      >
+        <Resource
+          name="accounts"
+          icon={UserIcon}
+          list={TalentList}
+          show={TalentShow}
+          // create={TalentCreate}
+          // edit={TalentEdit}
           options={{
             label: "Talents",
           }}
@@ -146,12 +212,12 @@ function App() {
           key="my-profile"
           path="/my-profile"
           render={() => <ProfileEdit />}
-        />, 
+        />,
         <Route
           key="passwd-change"
           path="/passwd-change"
           render={() => <PasswdChange />}
-        />
+        />,
       ]}
     >
       <Resource

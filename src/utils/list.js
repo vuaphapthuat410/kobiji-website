@@ -1,6 +1,7 @@
 export const roleList = [
   { id: "管理", name: "管理" },
   { id: "アドミン", name: "アドミン" },
+  { id: "クライアント", name: "クライアント" },
   // { id: "タレント", name: "タレント" },
 ];
 

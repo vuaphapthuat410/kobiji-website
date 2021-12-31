@@ -7,25 +7,31 @@ import {
   DateField,
   DeleteButton,
   EditButton,
+  List,
   Loading,
-  Pagination,
   ShowButton,
   TextField,
   useQuery,
-  ReferenceInput,
-  SelectInput,
-  SearchInput,
-  List,
 } from "react-admin";
-import useContext from "../../db/useContext";
 import { auth } from "../../db/firebase";
 import NameField from "../Layouts/NameField";
-
-const ListActions = (props) => {
-  // console.log("useruse", props.user);
+import { Pagination, TextInput } from "ra-ui-materialui";
+import { makeStyles, Chip } from "@material-ui/core";
+import SearchInput from "../Layouts/SearchInput";
+const ListActions = ({ user, searchInput, setSearchInput }) => {
   return (
-    <div>
-      {props.user.role === "管理" && (
+    <div
+      style={{
+        marginBottom: "1em",
+      }}
+    >
+      <SearchInput
+        value={searchInput}
+        onChange={(e) => {
+          setSearchInput(e.target.value);
+        }}
+      />
+      {user.role === "管理" && (
         <div style={{ float: "right", marginBottom: "30px" }}>
           <CreateButton label="追加" />
         </div>
@@ -34,28 +40,18 @@ const ListActions = (props) => {
   );
 };
 
-const eventFilters = [
-  <SearchInput source="title" alwaysOn />,
-  // <ReferenceInput
-  //   source="title"
-  //   label="タイトル"
-  //   reference="events"
-  //   allowEmpty
-  //   alwaysOn
-  // >
-  //   <SelectInput optionText="title" />
-  // </ReferenceInput>,
-];
 
 const EventList = (props) => {
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(100);
   const [sort, setSort] = useState({ field: "id", order: "ASC" });
+  const currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+  const [searchInput, setSearchInput] = useState("");
 
   const {
     data: events,
     total,
-    loading: eLoading,
+    loading,
     error,
   } = useQuery({
     type: "getList",
@@ -67,9 +63,7 @@ const EventList = (props) => {
     },
   });
 
-  const [{ currentUser }, loading] = useContext();
-
-  if (loading || eLoading) {
+  if (loading) {
     return <Loading />;
   }
   if (error) {
@@ -77,9 +71,10 @@ const EventList = (props) => {
   }
 
   let filterdEvents = [];
-  if (currentUser.role === "タレント") {
-    filterdEvents = events.filter((event) =>
-      event.members.some((member) => member === auth.currentUser.email)
+  if (currentUser.role === "タレント" || currentUser.role === "クライアント") {
+    filterdEvents = events.filter(
+      (event) =>
+        event.members.some((member) => member === auth.currentUser.email)
     );
   } else if (currentUser.role === "管理") {
     filterdEvents = events.filter(
@@ -90,50 +85,53 @@ const EventList = (props) => {
   else {
     filterdEvents = [...events];
   }
+
+  const searchedList = filterdEvents.filter((item) => {
+    return (
+      item.title.match(new RegExp(searchInput, "gi")) ||
+      item.description.match(new RegExp(searchInput, "gi"))
+    );
+  });
+
   return (
-    events && (
-      <>
-        <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
-        <List 
-          {...props}
-          filters={eventFilters} 
-          basePath="/events" 
-          actions={<ListActions user={currentUser} />}
-          bulkActionButtons={false}
-        >
-          <Datagrid
-            data={keyBy(filterdEvents, "id")}
-            ids={filterdEvents.map(({ id }) => id)}
-            currentSort={sort}
-            setSort={(field, order) => setSort({ field, order })}
-          >
-            <TextField source="title" label="タイトル" />
-            <TextField source="description" label="内容" />
-            <BooleanField source="active" label="開催する" />
-            <DateField
-              disabled
-              locales="ja-JP"
-              options={{ dateStyle: "long" }}
-              source="date"
-              label="日時"
-            />
-            <NameField label="参加者" />
-            <ShowButton label="詳細" />
-            {currentUser.role === "管理" && <EditButton label="変更" />}
-            {currentUser.role === "管理" && (
-              <DeleteButton undoable={false} label="削除" redirect={false} />
-            )}
-          </Datagrid>
-        </List>
-        {/* <Pagination
-          page={page}
-          setPage={setPage}
-          perPage={perPage}
-          setPerPage={setPerPage}
-          total={total}
-        /> */}
-      </>
-    )
+    <>
+      <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント管理</div>
+      <ListActions
+        user={currentUser}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+      />
+      <Datagrid
+        data={keyBy(searchedList, "id")}
+        ids={searchedList.map(({ id }) => id)}
+        currentSort={sort}
+        setSort={(field, order) => setSort({ field, order })}
+      >
+        <TextField source="title" label="タイトル" />
+        <TextField source="description" label="内容" />
+        <BooleanField source="active" label="開催する" />
+        <DateField
+          disabled
+          locales="ja-JP"
+          options={{ dateStyle: "long" }}
+          source="date"
+          label="日時"
+        />
+        <NameField label="参加者" />
+        <ShowButton label="詳細" />
+        {currentUser.role === "管理" && <EditButton label="変更" />}
+        {currentUser.role === "管理" && (
+          <DeleteButton undoable={false} label="削除" redirect={false} />
+        )}
+      </Datagrid>
+      <Pagination
+        page={page}
+        setPage={setPage}
+        perPage={perPage}
+        setPerPage={setPerPage}
+        total={total}
+      />
+    </>
   );
 };
 

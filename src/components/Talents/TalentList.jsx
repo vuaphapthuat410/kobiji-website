@@ -3,37 +3,50 @@ import React, { useState } from "react";
 import {
   CreateButton,
   Datagrid,
-  DateField,
-  DeleteButton,
-  EditButton,
-  Loading,
-  Pagination,
-  ShowButton,
+  DateField, Loading,
+  Pagination, ShowButton,
   TextField,
-  useQuery,
-  ExportButton,
-  List,
-  SearchInput,
-  FilterButton
+  useQuery
 } from "react-admin";
 import { auth } from "../../db/firebase";
+import SearchInput from "../Layouts/SearchInput";
 
-const ListActions = (props) => (
-  <div>
-    <div style={{ float: "right", marginBottom: "30px" }}>
-      <CreateButton label="追加" />
-    </div>
-    <FilterButton label="filter"/>
+const ListActions = ({ user, searchInput, setSearchInput }) => (
+  <div
+    style={{
+      marginBottom: "1em",
+    }}
+  >
+    <SearchInput
+      value={searchInput}
+      onChange={(e) => {
+        setSearchInput(e.target.value);
+      }}
+    />
+    {user.role === "管理" && (
+      <div style={{ float: "right", marginBottom: "30px" }}>
+        <CreateButton label="追加" />
+      </div>
+    )}
     {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
 
 const TalentList = (props) => {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(100);
   const [sort, setSort] = useState({ field: "id", order: "ASC" });
+
+  const currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
+  const [filter, setFilter] = useState(
+    currentUser.role === "クライアント"
+      ? {}
+      : { createdby: auth.currentUser.email }
+  );
+  const [searchInput, setSearchInput] = useState("");
+
   const {
-    data: users,
+    data: talents,
     total,
     loading,
     error,
@@ -43,7 +56,7 @@ const TalentList = (props) => {
     payload: {
       pagination: { page, perPage },
       sort,
-      filter: {},
+      filter,
     },
   });
 
@@ -54,87 +67,46 @@ const TalentList = (props) => {
     return <p>ERROR: {error}</p>;
   }
 
-  const talents = users.filter(
-    (user) => user.createdby === auth.currentUser.email
-  );
-  
-  const postFilters = [
-    <SearchInput source="name" alwaysOn />
-];
+  const searchedList = talents.filter((item) => {
+    return (
+      item.name.match(new RegExp(searchInput, "gi"))
+    );
+  });
 
-  // return (
-  //   <>
-  //     <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント管理</div>
-  //     <ListActions />
-  //     <Datagrid
-  //       data={keyBy(talents, "id")}
-  //       ids={talents.map(({ id }) => id)}
-  //       currentSort={sort}
-  //       setSort={(field, order) => setSort({ field, order })}
-  //     >
-  //       <TextField source="name" label="名前" />
-  //       <TextField source="mail" label="メールアドレス" />
-  //       <TextField source="birthday" label="生年月日" />
-  //       <TextField source="status" label="ステータス" />
-  //       <TextField source="country" label="国籍" />
-  //       <DateField
-  //         disabled
-  //         showTime="false"
-  //         source="createdate"
-  //         label="作成日"
-  //       />
-  //       <ShowButton label="詳細" />
-  //       <EditButton label="変更" />
-  //       <DeleteButton undoable={false} label="削除" />
-  //     </Datagrid>
-  //     <Pagination
-  //       page={page}
-  //       setPage={setPage}
-  //       perPage={perPage}
-  //       setPerPage={setPerPage}
-  //       total={total}
-  //     />
-  //   </>
-  // );
   return (
     <>
       <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント管理</div>
-      <List
-        {...props}
-        filter={{createdby: auth.currentUser.email}}
-        filters={postFilters}
-        actions={<ListActions />}
-        bulkActionButtons={false}
+      <ListActions
+        user={currentUser}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+      />
+      <Datagrid
+        data={keyBy(searchedList, "id")}
+        ids={searchedList.map(({ id }) => id)}
+        currentSort={sort}
+        setSort={(field, order) => setSort({ field, order })}
       >
-        <Datagrid
-          // data={keyBy(talents, "id")}
-          // ids={talents.map(({ id }) => id)}
-          // currentSort={sort}
-          // setSort={(field, order) => setSort({ field, order })}
-        >
-          <TextField source="name" label="名前" />
-          <TextField source="mail" label="メールアドレス" />
-          <TextField source="birthday" label="生年月日" />
-          <TextField source="status" label="ステータス" />
-          <TextField source="country" label="国籍" />
-          <DateField
-            disabled
-            showTime="false"
-            source="createdate"
-            label="作成日"
-          />
-          <ShowButton label="詳細" />
-          <EditButton label="変更" />
-          <DeleteButton undoable={false} label="削除" />
-        </Datagrid>
-      </List>
-      {/* <Pagination
+        <TextField source="name" label="名前" />
+        <TextField source="mail" label="メールアドレス" />
+        <TextField source="birthday" label="生年月日" />
+        <TextField source="status" label="ステータス" />
+        <TextField source="country" label="国籍" />
+        <DateField
+          disabled
+          showTime="false"
+          source="createdate"
+          label="作成日"
+        />
+        <ShowButton label="詳細" />
+      </Datagrid>
+      <Pagination
         page={page}
         setPage={setPage}
         perPage={perPage}
         setPerPage={setPerPage}
         total={total}
-      /> */}
+      />
     </>
   );
 };
