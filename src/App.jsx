@@ -24,6 +24,7 @@ import dataProvider from "./db/dataProvider";
 import { auth, authProvider } from "./db/firebase";
 import { ProfileEdit } from "./components/Profile/profile";
 import { PasswdChange } from "./components/Profile/changepasswd";
+import CustomLogoutButton from "./components/Layouts/CustomLogoutButton"
 
 function App() {
   const [currentUser, setCurrentuser] = useState({
@@ -76,6 +77,7 @@ function App() {
         dataProvider={dataProvider}
         authProvider={authProvider}
         loginPage={CustomLoginPage}
+        logoutButton={CustomLogoutButton}
         customRoutes={[
           <Route
             key="my-profile"
@@ -96,6 +98,9 @@ function App() {
           show={AccountShow}
           create={AccountCreate}
           edit={AccountEdit}
+          options={{ 
+            label: 'アカウント' 
+          }}
         />
 
         <Resource
@@ -105,6 +110,9 @@ function App() {
           create={EventCreate}
           show={EventShow}
           edit={EventEdit}
+          options={{ 
+            label: 'イベント' 
+          }}
         />
       </Admin>
     );
@@ -118,6 +126,7 @@ function App() {
         dataProvider={dataProvider}
         authProvider={authProvider}
         loginPage={CustomLoginPage}
+        logoutButton={CustomLogoutButton}
         customRoutes={[
           <Route
             key="my-profile"
@@ -139,7 +148,7 @@ function App() {
           create={TalentCreate}
           edit={TalentEdit}
           options={{
-            label: "Talents",
+            label: "タレント",
           }}
         />
 
@@ -150,6 +159,9 @@ function App() {
           create={EventCreate}
           show={EventShow}
           edit={EventEdit}
+          options={{ 
+            label: 'イベント' 
+          }}
         />
       </Admin>
     );
@@ -163,6 +175,7 @@ function App() {
         dataProvider={dataProvider}
         authProvider={authProvider}
         loginPage={CustomLoginPage}
+        logoutButton={CustomLogoutButton}
         customRoutes={[
           <Route
             key="my-profile"
@@ -184,7 +197,7 @@ function App() {
           // create={TalentCreate}
           // edit={TalentEdit}
           options={{
-            label: "Talents",
+            label: "タレント",
           }}
         />
 
@@ -195,6 +208,9 @@ function App() {
           create={EventCreate}
           show={EventShow}
           edit={EventEdit}
+          options={{ 
+            label: 'イベント' 
+          }}
         />
       </Admin>
     );
@@ -207,6 +223,7 @@ function App() {
       dataProvider={dataProvider}
       authProvider={authProvider}
       loginPage={CustomLoginPage}
+      logoutButton={CustomLogoutButton}
       customRoutes={[
         <Route
           key="my-profile"
@@ -227,6 +244,9 @@ function App() {
         create={EventCreate}
         show={EventShow}
         edit={EventEdit}
+        options={{ 
+          label: 'イベント' 
+        }}
       />
     </Admin>
   );
