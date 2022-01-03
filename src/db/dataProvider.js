@@ -1,6 +1,4 @@
-import jsonServerProvider from "ra-data-json-server";
-import { dataProvider } from "./firebase"
-
+import { dataProvider } from "./firebase";
 // A function decorating a dataProvider for handling user profiles
 const addUserProfileOverrides = () => ({
   ...dataProvider,
@@ -18,13 +16,13 @@ const addUserProfileOverrides = () => ({
     const avatar = await (data.avatar.rawFile instanceof File
       ? convertFileToBase64(data.avatar)
       : data.avatar);
-
+    
     localStorage.setItem(
       "userProfile",
       JSON.stringify({
         ...data,
         id: "unique_id",
-        avatar
+        avatar,
       })
     );
     return Promise.resolve({ data });
@@ -33,7 +31,7 @@ const addUserProfileOverrides = () => ({
     // do nothing, just approve
 
     return Promise.resolve({ data });
-  }
+  },
 });
 
 /**
