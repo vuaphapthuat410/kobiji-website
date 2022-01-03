@@ -11,11 +11,50 @@ import {
   TextField,
   useQuery,
   EditButton,
+  ExportButton,
+  useMutation,
 } from "react-admin";
-import { auth } from "../../db/firebase";
+import firebase, { auth } from "../../db/firebase";
 import SearchInput from "../Layouts/SearchInput";
 
-const ListActions = ({ user, searchInput, setSearchInput }) => (
+function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
+  let wishList = [...client.wishlist]
+  const isContain = wishList.includes(record.mail)
+  if (isContain) {
+    wishList = wishList.filter((item) => {
+      if (item != record.mail) {
+        return item
+      }
+    })
+  } 
+  else {
+    wishList = [...wishList, record.mail]
+  }
+
+  const [updateWishList, { loading, loaded }] = useMutation({
+    type: "update",
+    resource: "accounts",
+    payload: { id: client.id, data: { wishlist: wishList } },
+  });
+
+  if (loaded) {
+    // client.wishlist = wishList
+    // setIsWishList(!isWishList)
+    refetch()
+  }
+  
+  return(
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={updateWishList}
+    >
+      {(isContain && "	− 欲しいリスト") || (!isContain && "✙ 欲しいリスト")}
+    </Button>
+  )
+}
+
+const ListActions = ({ user, searchInput, setSearchInput, isWishList, setWishList }) => (
   <div
     style={{
       marginBottom: "1em",
@@ -30,18 +69,19 @@ const ListActions = ({ user, searchInput, setSearchInput }) => (
     {user.role === "管理" && (
       <div style={{ float: "right", marginBottom: "30px" }}>
         <CreateButton label="追加" />
+        <ExportButton label="エクスポート" />
       </div>
     )}
     {user.role === "クライアント" && (
       <div style={{ float: "right", marginBottom: "30px" }}>
         <Button variant="contained" color="secondary"　onClick={() => {
-              window.alert("Write show talents added to wishlist feature here(just filter ) :))");
+              // window.alert("Write show talents added to wishlist feature here(just filter ) :))");
+              setWishList(!isWishList)
             }}>
-          欲しいリスト
+          {(!isWishList && "欲しいリスト") || (isWishList && "タレントリスト")} {/*change button*/}
         </Button>
       </div>
     )}
-    {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
 
@@ -52,12 +92,14 @@ const TalentList = (props) => {
 
   const currentUser = JSON.parse(window.localStorage.getItem("currentUser"));
   const [searchInput, setSearchInput] = useState("");
+  const [isWishList, setIsWishList] = useState(false);
 
   const {
     data: accounts,
     total,
     loading,
     error,
+    refetch
   } = useQuery({
     type: "getList",
     resource: "accounts",
@@ -75,6 +117,13 @@ const TalentList = (props) => {
     return <p>ERROR: {error}</p>;
   }
 
+  var client = accounts.find(
+    (account) =>
+      account.role === "クライアント" &&
+      account.mail === auth.currentUser.email
+  );
+  
+
   let talents = [];
   if (currentUser.role === "クライアント") {
     talents = accounts.filter((account) => account.role === "タレント");
@@ -86,8 +135,19 @@ const TalentList = (props) => {
         account.createdby === auth.currentUser.email
     );
   }
+  
+  const wishList = talents.filter((item) => {
+    if (isWishList == true) {
+      if (client.wishlist.includes(item.mail)) {
+        return item
+      }
+    }
+    else {
+      return item
+    }
+  })
 
-  const searchedList = talents.filter((item) => {
+  const searchedList = wishList.filter((item) => {
     return item.name.match(new RegExp(searchInput, "gi"));
   });
 
@@ -98,6 +158,8 @@ const TalentList = (props) => {
         user={currentUser}
         searchInput={searchInput}
         setSearchInput={setSearchInput}
+        isWishList={isWishList}
+        setWishList={setIsWishList}
       />
       <Datagrid
         data={keyBy(searchedList, "id")}
@@ -123,15 +185,7 @@ const TalentList = (props) => {
 
         <ShowButton label="詳細" />
         {currentUser.role === "クライアント" ? (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              window.alert("Write add to wishlist feature here :))");
-            }}
-          >
-            ✙ 欲しいリスト
-          </Button>
+          <AddToWishList client={client} isWishList={isWishList} setIsWishList={setIsWishList} refetch={refetch}/>
         ) : (
           <EditButton label="変更" />
         )}
