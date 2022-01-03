@@ -11,12 +11,12 @@ const CustomUserMenu = (props) => {
     <UserMenu key={profileVersion} {...props}>
       <MenuItemLink
         to="/my-profile"
-        primaryText="My Profile"
+        primaryText="プロフィール"
         leftIcon={<PersonIcon />}
       />
       <MenuItemLink
         to="/passwd-change"
-        primaryText="Change Password"
+        primaryText="パスワードを変更する"
         leftIcon={<LockIcon />}
       />
     </UserMenu>
