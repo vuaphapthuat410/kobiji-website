@@ -12,6 +12,7 @@ import {
   ShowButton,
   TextField,
   useQuery,
+  ExportButton,
 } from "react-admin";
 import { auth } from "../../db/firebase";
 import NameField from "../Layouts/NameField";
@@ -34,6 +35,7 @@ const ListActions = ({ user, searchInput, setSearchInput }) => {
       {user.role === "管理" && (
         <div style={{ float: "right", marginBottom: "30px" }}>
           <CreateButton label="追加" />
+          <ExportButton label="エクスポート" />
         </div>
       )}
     </div>

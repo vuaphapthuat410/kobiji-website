@@ -1,7 +1,18 @@
 import keyBy from "lodash/keyBy";
 import React, { useState } from "react";
 import {
-  CreateButton, Datagrid, DateField, DeleteButton, EditButton, Loading, Pagination, ShowButton, TextField, useQuery, useRefresh
+  CreateButton, 
+  Datagrid, 
+  DateField, 
+  DeleteButton, 
+  EditButton, 
+  Loading, 
+  Pagination, 
+  ShowButton, 
+  TextField, 
+  useQuery, 
+  useRefresh, 
+  ExportButton,
 } from "react-admin";
 import SearchInput from "../Layouts/SearchInput";
 const ListActions = ({ user, searchInput, setSearchInput }) => (
@@ -18,8 +29,8 @@ const ListActions = ({ user, searchInput, setSearchInput }) => (
     />
     <div style={{ float: "right", marginBottom: "30px" }}>
       <CreateButton label="追加" />
+      <ExportButton label="エクスポート" />
     </div>
-    {/* <ExportButton label="エクスポート" /> */}
   </div>
 );
 
