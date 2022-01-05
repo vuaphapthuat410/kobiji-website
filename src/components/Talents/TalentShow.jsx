@@ -1,5 +1,6 @@
 import ChevronLeft from "@material-ui/icons/ChevronLeft";
-import React from "react";
+import React,{useState} from "react";
+import "./talent.css"
 import {
   EditButton,
   ListButton,
@@ -8,7 +9,29 @@ import {
   TextField,
   TopToolbar
 } from "react-admin";
-
+import { makeStyles } from "@material-ui/core/styles";
+import Avatar from "@material-ui/core/Avatar";
+function Ava({record}){
+  console.log(record);
+  return(
+    <div className="flex-container">
+    <div>
+    <p><label>性別：<span>{record.gender}</span></label></p>
+    <p><label>ステータス：<span>{record.status}</span></label></p>
+    <p><label>電話番号：<span>{record.phone}</span></label></p>
+    <p><label>国籍：<span>{record.country}</span></label></p>
+    <p><label>管理者：<span>{record.createdby}</span></label></p>
+    <p><label>名前：<span>{record.name}</span></label></p>
+    <p><label>メールアドレス：<span>{record.mail}</span></label></p>
+    <p><label>生年月日：<span>{record.birthday}</span></label></p>
+    
+    <p><label>自己紹介：<span>{record.self_introduction}</span></label> </p>
+    </div>
+    <div> <img src={record?.avatar}  /></div>
+     
+    </div>
+  )
+}
 const ShowActionList = ({ basePath, data }) => {
   return (
     <TopToolbar>
@@ -23,23 +46,15 @@ const ShowActionList = ({ basePath, data }) => {
 };
 
 const TalentShow = (props) => {
-  
+ 
   return (
   <>
     <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント詳細</div>
     <Show {...props} title="タレント詳細" actions={<ShowActionList />}>
-      <SimpleShowLayout>
-        <TextField source="createdby" label="管理者：" />
-        <TextField source="name" label="名前" />
-        <TextField source="mail" label="メールアドレス" />
-        <TextField source="birthday" label="生年月日" />
-        <TextField source="gender" label="性別" />
-        <TextField source="status" label="ステータス" />
-        <TextField source="phone" label="電話番号" />
-        <TextField source="country" label="国籍" />
-        <TextField source="self-introduction" label="自己紹介" />
-      </SimpleShowLayout>
+      <Ava/>
+     
     </Show>
+      
   </>
   )
 };
