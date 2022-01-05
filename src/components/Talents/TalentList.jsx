@@ -1,6 +1,7 @@
 import keyBy from "lodash/keyBy";
 import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
+import Avatar from "@material-ui/core/Avatar";
 import {
   CreateButton,
   Datagrid,
@@ -14,9 +15,31 @@ import {
   ExportButton,
   useMutation,
 } from "react-admin";
+import { makeStyles } from "@material-ui/core/styles";
 import firebase, { auth } from "../../db/firebase";
 import SearchInput from "../Layouts/SearchInput";
-
+function Ava({record}){
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      "& > *": {
+        margin: theme.spacing(1),
+      },
+    },
+    small: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    large: {
+      width: theme.spacing(7),
+      height: theme.spacing(7),
+    },
+  }));
+  const classes = useStyles();
+  return(
+    <Avatar src={record?.avatar} className={classes.small} />
+  )
+}
 function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
   let wishList = [...client.wishlist]
   const isContain = wishList.includes(record.mail)
@@ -109,7 +132,7 @@ const TalentList = (props) => {
       filter: {},
     },
   });
-
+  
   if (loading) {
     return <Loading />;
   }
@@ -146,7 +169,6 @@ const TalentList = (props) => {
       return item
     }
   })
-
   const searchedList = wishList.filter((item) => {
     return item.name.match(new RegExp(searchInput, "gi"));
   });
@@ -168,6 +190,7 @@ const TalentList = (props) => {
         setSort={(field, order) => setSort({ field, order })}
       >
         <TextField source="name" label="名前" />
+        <Ava/>
         <TextField source="mail" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
         <TextField source="status" label="ステータス" />
