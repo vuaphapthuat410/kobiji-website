@@ -42,7 +42,10 @@ function Ava({record}){
   )
 }
 function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
-  let wishList = [...client.wishlist]
+  let wishList = []
+  if (client != undefined && client.wishlist != undefined) {
+    wishList = [...client.wishlist]
+  }
   const isContain = wishList.includes(record.mail)
   if (isContain) {
     wishList = wishList.filter((item) => {
@@ -55,10 +58,15 @@ function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
     wishList = [...wishList, record.mail]
   }
 
+  let id = null
+  if (client != undefined) {
+    id = client.id
+  }
+
   const [updateWishList, { loading, loaded }] = useMutation({
     type: "update",
     resource: "accounts",
-    payload: { id: client.id, data: { wishlist: wishList } },
+    payload: { id: id, data: { wishlist: wishList } },
   });
 
   if (loaded) {
@@ -161,7 +169,7 @@ const TalentList = (props) => {
   
   const wishList = talents.filter((item) => {
     if (isWishList == true) {
-      if (client.wishlist.includes(item.mail)) {
+      if (client.wishlist != undefined && client.wishlist.includes(item.mail)) {
         return item
       }
     }
