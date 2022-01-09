@@ -18,6 +18,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import firebase, { auth } from "../../db/firebase";
 import SearchInput from "../Layouts/SearchInput";
+import { downloadCSV } from "../Layouts/export";
 function Ava({record}){
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -76,8 +77,7 @@ function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
     </Button>
   )
 }
-
-const ListActions = ({ user, searchInput, setSearchInput, isWishList, setWishList }) => (
+const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWishList,downloadCSV }) => (
   <div
     style={{
       marginBottom: "1em",
@@ -92,7 +92,7 @@ const ListActions = ({ user, searchInput, setSearchInput, isWishList, setWishLis
     {user.role === "管理" && (
       <div style={{ float: "right", marginBottom: "30px" }}>
         <CreateButton label="追加" />
-        <ExportButton label="エクスポート" />
+        <button label="エクスポート" 　onClick={()=>{downloadCSV(data,"talent")}}>エクスポート</button>
       </div>
     )}
     {user.role === "クライアント" && (
@@ -172,7 +172,6 @@ const TalentList = (props) => {
   const searchedList = wishList.filter((item) => {
     return item.name.match(new RegExp(searchInput, "gi"));
   });
-
   return (
     <>
       <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント管理</div>
@@ -182,6 +181,8 @@ const TalentList = (props) => {
         setSearchInput={setSearchInput}
         isWishList={isWishList}
         setWishList={setIsWishList}
+        data = {searchedList}
+        downloadCSV={downloadCSV}
       />
       <Datagrid
         data={keyBy(searchedList, "id")}
