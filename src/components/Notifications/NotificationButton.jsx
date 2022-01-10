@@ -5,7 +5,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  Menu
+  Menu,
+  Badge,
+  ListItemSecondaryAction,
 } from "@material-ui/core";
 import { Check, Notifications, RemoveCircle } from "@material-ui/icons";
 import * as React from "react";
@@ -26,24 +28,22 @@ const ReadButton = ({ record, member, notifs, setNotifs }) => {
     setNotifs(notifs);
   }
   return (
-    <IconButton size="small" onClick={updateRead} disabled={loading || loaded}>
-      {loaded ? (
-        <Check fontSize="inherit" />
-      ) : (
-        <RemoveCircle fontSize="inherit" color="primary" />
-      )}
+    <IconButton
+      onClick={updateRead}
+      disabled={loading || loaded || record.members_read[member]}
+      edge="end"
+    >
+      {(loaded || record.members_read[member]) ? <Check /> : <RemoveCircle color="primary" />}
     </IconButton>
   );
 
   // <Button label="Approve" onClick={approve} disabled={loading} />;
 };
 
-const NotificationList = () => {
-  const [notifs, setNotifs] = React.useState(null);
+const NotificationList = (props) => {
   const account_id = auth.currentUser?.email ?? "";
 
   const [{ currentUser }, loading] = useContext();
-
 
   var unsubscribe = firebase
     .firestore()
@@ -57,7 +57,7 @@ const NotificationList = () => {
       .onSnapshot((querySnapshot) => {
         var events = [];
         querySnapshot.forEach((doc) => {
-          events.push({...doc.data(), id: doc.id});
+          events.push({ ...doc.data(), id: doc.id });
         });
 
         if (currentUser) {
@@ -70,16 +70,16 @@ const NotificationList = () => {
           }
         }
 
-        setNotifs(events);
+        props.setNotifs(events);
         // console.log("Currentevents: ", events);
       });
     return () => {
       unsubscribe();
     };
-  }, [currentUser]);
+  });
 
   if (loading) return <Loading />;
-  if (!notifs || !notifs[0])
+  if (!props.notifs || !props.notifs[0])
     return (
       <>
         <ListItem style={{ whiteSpace: "normal" }}>
@@ -89,53 +89,68 @@ const NotificationList = () => {
       </>
     );
 
-  let notifList = notifs.map((notif) => {
-    let read = notif.members_read[account_id];
-    return (
-      <>
-        <ListItem style={{ whiteSpace: "normal" }}>
-          <ListItemText
-            primary={
-              <a
-                style={{
-                  fontWeight: read ? "normal" : "bold",
-                }}
-                href={`/#/events/${notif.id}/show`}
-              >
-                {notif.title}
-              </a>
-            }
-            primaryTypographyProps={{ variant: "h6", noWrap: true }}
-            secondary={
-              <div
-                style={{
-                  fontWeight: read ? "normal" : "bold",
-                }}
-              >
-                {new Date(notif.date.seconds).toDateString()} - イベントに招待されました。
-                {read ? (
-                  <Check fontSize="inherit" />
-                ) : (
-                  <ReadButton
-                    record={notif}
-                    member={account_id}
-                    notifs={notifs}
-                    setNotifs={setNotifs}
-                  />
-                )}
-              </div>
-            }
-          />
-        </ListItem>
-        <Divider />
-      </>
-    );
-  });
+  let notifList = props.notifs
+    .sort((a, b) => {
+      return a.members_read[account_id]
+        ? b.members_read[account_id]
+          ? 0
+          : 1
+        : b.members_read[account_id]
+        ? -1
+        : 0;
+    })
+    .map((notif) => {
+      let read = notif.members_read[account_id];
+      return (
+        <>
+          <ListItem
+            style={{ whiteSpace: "normal" }}
+            button
+            component="a"
+            href={`/#/events/${notif.id}/show`}
+          >
+            <ListItemText
+              primary={
+                <div
+                  style={{
+                    fontWeight: read ? "normal" : "bold",
+                  }}
+                >
+                  {notif.title}
+                </div>
+              }
+              primaryTypographyProps={{ variant: "h6", noWrap: true }}
+              secondary={
+                <div
+                  style={{
+                    fontWeight: read ? "normal" : "bold",
+                  }}
+                >
+                  {new Date(notif.date.seconds * 1000).toDateString()} -
+                  イベントに招待されました。
+                </div>
+              }
+            />
+            <ListItemSecondaryAction>
+              <ReadButton
+                record={notif}
+                member={account_id}
+                notifs={props.notifs}
+                setNotifs={props.setNotifs}
+              />
+            </ListItemSecondaryAction>
+          </ListItem>
+          <Divider />
+        </>
+      );
+    });
 
   return <>{notifList}</>;
 };
 
 function NotificationButton(props) {
+  const account_id = auth.currentUser?.email ?? "";
+  const [notifs, setNotifs] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const menuId = "menu";
@@ -168,7 +183,7 @@ function NotificationButton(props) {
     >
       <List>
         <Divider />
-        <NotificationList />
+        <NotificationList notifs={notifs} setNotifs={setNotifs} />
       </List>
     </Menu>
   );
@@ -183,7 +198,17 @@ function NotificationButton(props) {
           aria-haspopup="true"
           onClick={handleNotificationsOpen}
         >
-          <Notifications />
+          <Badge
+            badgeContent={
+              notifs?.filter(
+                (notif) => notif.members_read[account_id] === false
+              ).length
+            }
+            color="error"
+            max={9}
+          >
+            <Notifications />
+          </Badge>
         </IconButton>
       </Box>
       {renderMenu}
