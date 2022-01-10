@@ -101,7 +101,7 @@ const AccountCreate = (props) => {
   if (loading) return <Loading />;
 
   return (
-    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess}>
+    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess} >
       <SimpleForm toolbar={<CreateToolbar />}>
         {/* <TextInput source="id" label="ID" /> */}
         <TextInput source="name" label="名前" validate={validateName} />
