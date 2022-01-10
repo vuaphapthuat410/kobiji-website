@@ -10,10 +10,16 @@ export const genderList = [
   { id: "男", name: "男" },
 ];
 
+// export const statusList = [
+//   { id: "新規", name: "新規" },
+//   { id: "新規", name: "学中" },
+//   { id: "卒業", name: "卒業" },
+// ];
+
 export const statusList = [
   { id: "新規", name: "新規" },
-  { id: "新規", name: "学中" },
-  { id: "卒業", name: "卒業" },
+  { id: "面接ある", name: "面接ある" },
+  { id: "売れた", name: "売れた" },
 ];
 
 export const countryList = [

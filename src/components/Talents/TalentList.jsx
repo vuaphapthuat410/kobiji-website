@@ -1,6 +1,6 @@
 import keyBy from "lodash/keyBy";
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
+import Button  from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import {
   CreateButton,
@@ -14,11 +14,15 @@ import {
   EditButton,
   ExportButton,
   useMutation,
+  ImageInput,
 } from "react-admin";
 import { makeStyles } from "@material-ui/core/styles";
 import firebase, { auth } from "../../db/firebase";
 import SearchInput from "../Layouts/SearchInput";
 import { downloadCSV } from "../Layouts/export";
+
+import Tesseract from 'tesseract.js';
+
 function Ava({record}){
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,6 +45,7 @@ function Ava({record}){
     <Avatar src={record?.avatar} className={classes.small} />
   )
 }
+
 function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
   let wishList = []
   if (client != undefined && client.wishlist != undefined) {
@@ -76,13 +81,38 @@ function AddToWishList({record, client, isWishList, setIsWishList, refetch}) {
   }
   
   return(
-    <Button
+    <>
+    {/* {<Button
       variant="contained"
-      color="primary"
+      color="red"
       onClick={updateWishList}
+      style={{background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'}}
     >
       {(isContain && "	− 欲しいリスト") || (!isContain && "✙ 欲しいリスト")}
-    </Button>
+    </Button>} */}
+    {!isContain && !(record.status === "売れた") && <Button
+      variant="contained"
+      color="red"
+      onClick={updateWishList}
+      style={{background: 'linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)'}}
+    >
+      ✙ 欲しいリスト
+    </Button>}
+    {isContain && !(record.status === "売れた") && <Button
+      variant="contained"
+      color="red"
+      onClick={updateWishList}
+      style={{background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'}}
+    >
+      − 欲しいリスト
+    </Button>}
+    {record.status === "売れた" && <Button
+      variant="contained"
+      style={{background: '#dddddd'}}
+    >
+      追加できない
+    </Button>}
+    </>
   )
 }
 const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWishList,downloadCSV }) => (
@@ -101,6 +131,7 @@ const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWi
       <div style={{ float: "right", marginBottom: "30px" }}>
         <CreateButton label="追加" />
         <button label="エクスポート" 　onClick={()=>{downloadCSV(data,"talent")}}>エクスポート</button>
+        <OCR />
       </div>
     )}
     {user.role === "クライアント" && (
@@ -115,6 +146,35 @@ const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWi
     )}
   </div>
 );
+
+function OCR() {
+  const [imagePath, setImagePath] = useState("");
+ 
+  const handleChange = (event) => {
+    setImagePath(URL.createObjectURL(event.target.files[0]));
+  }
+ 
+  const handleClick = () => {
+    Tesseract.recognize(
+      imagePath,
+      'jpn',
+      { logger: m => console.log(m) }
+    )
+    .catch (err => {
+      console.error(err);
+    })
+    .then(({ data: { text } }) => {
+      console.log(text);
+    })
+  }
+ 
+  return (
+    <>
+      <input type="file" onChange={handleChange} display="invisible"/>
+      <button onClick={handleClick} style={{height:25}}> convert to text</button>
+    </>
+  );
+}
 
 const TalentList = (props) => {
   const [page, setPage] = useState(1);
@@ -169,7 +229,7 @@ const TalentList = (props) => {
   
   const wishList = talents.filter((item) => {
     if (isWishList == true) {
-      if (client.wishlist != undefined && client.wishlist.includes(item.mail)) {
+      if (client.wishlist != undefined && client.wishlist.includes(item.mail) && item.status !== "売れた") {
         return item
       }
     }
