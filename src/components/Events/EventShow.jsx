@@ -34,7 +34,7 @@ const ShowActionList = ({ basePath, data }) => {
   );
 };
 
-function Ava({ record }) {
+function DetailInfo({ record }) {
   console.log(record);
   return (
     <div className="flex-container">
@@ -75,7 +75,7 @@ const EventShow = (props) => (
   <>
     <div style={{ fontSize: "20px", fontWeight: "bold" }}>イベント詳細</div>
     <Show {...props} title="イベント詳細" actions={<ShowActionList />}>
-      <Ava />
+      <DetailInfo />
     </Show>
   </>
 );
