@@ -10,11 +10,12 @@ import {
   SelectInput,
   SimpleForm,
   TextInput,
+  ImageInput,
   Toolbar,
   TopToolbar,
   useDataProvider,
   useMutation,
-  useRedirect
+  useRedirect,
 } from "react-admin";
 import { auth } from "../../db/firebase";
 import {
@@ -100,7 +101,7 @@ const AccountCreate = (props) => {
   if (loading) return <Loading />;
 
   return (
-    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess}>
+    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess} >
       <SimpleForm toolbar={<CreateToolbar />}>
         {/* <TextInput source="id" label="ID" /> */}
         <TextInput source="name" label="名前" validate={validateName} />
@@ -132,7 +133,7 @@ const AccountCreate = (props) => {
         <SelectInput
           source="status"
           label="ステータス"
-          choices={statusList}
+          choices={[{ id: "新規", name: "新規" }]}
           validate={validateStatus}
         />
 

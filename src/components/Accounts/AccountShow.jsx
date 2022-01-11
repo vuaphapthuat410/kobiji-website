@@ -1,4 +1,6 @@
-import React from "react";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import React,{useState} from "react";
+import "./account.css"
 import {
   Show,
   SimpleShowLayout,
@@ -7,7 +9,19 @@ import {
   TopToolbar,
   ListButton,
 } from "react-admin";
-import ChevronLeft from "@material-ui/icons/ChevronLeft";
+import { makeStyles } from "@material-ui/core/styles";
+function Ava({record}){
+  console.log(record);
+  return(
+    <div className="flex-container">
+    <div>
+    <p><label>名前：<span>{record.name}</span></label></p>
+    <p><label>メールアドレス：<span>{record.mail}</span></label></p>
+    <p><label>役割<span>{record.role}</span></label></p>
+    </div>
+    </div>
+  )
+}
 
 const ShowActionList = ({ basePath, data }) => {
   return (
@@ -21,17 +35,15 @@ const ShowActionList = ({ basePath, data }) => {
     </TopToolbar>
   );
 };
-const AccountShow = (props) => (
+const AccountShow = (props) => {
+  return(
   <>
     <div style={{ fontSize: "20px", fontWeight: "bold" }}>タレント詳細</div>
     <Show {...props} actions={<ShowActionList />}>
-      <SimpleShowLayout>
-        <TextField source="name" label="名前" />
-        <TextField source="mail" label="メールアドレス" />
-        <TextField source="role" label="役割" />
-      </SimpleShowLayout>
+      <Ava />
     </Show>
   </>
-);
+)
+};
 
 export default AccountShow;

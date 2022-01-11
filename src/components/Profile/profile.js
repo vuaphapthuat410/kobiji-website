@@ -62,8 +62,8 @@ export const ProfileEdit = ({ staticContext, ...props }) => {
         .collection("accounts")
         .where("mail", "==", auth.currentUser.email)
         .get()
-        .then((snapshot) => {
-          firebase
+        .then(async (snapshot) => {
+          await firebase
             .firestore()
             .collection("accounts")
             .doc(snapshot.docs.at(0).id)
@@ -71,6 +71,7 @@ export const ProfileEdit = ({ staticContext, ...props }) => {
               name: values.fullName,
               avatar: avatar,
             });
+          window.location.reload();
         });
 
       dataProvider.updateUserProfile(
