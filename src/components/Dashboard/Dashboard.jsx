@@ -30,6 +30,10 @@ function Dashboard() {
           );
         } else if (currentUser.role === "管理") {
           data = data.filter((event) => event.createdby === account_id);
+        } else if(currentUser.role === "クライアント") {
+          data = data.filter((event) =>
+            event.members.some((member) => member === account_id)
+          );
         }
         // debugger;
 
