@@ -18,22 +18,21 @@ import useContext from "../../db/useContext";
 const ReadButton = ({ record, member, notifs, setNotifs }) => {
   let members_read = { ...record.members_read };
   members_read[member] = true;
-  const [updateRead, { loading, loaded }] = useMutation({
-    type: "update",
-    resource: "events",
-    payload: { id: record.id, data: { members_read: members_read } },
-  });
-  if (loaded) {
-    record.members_read[member] = true;
-    setNotifs(notifs);
+  const updateFb = async() =>{
+    const dataEvent = await firebase.firestore().collection("events").doc(record.id).get();
+    firebase
+      .firestore()
+      .collection("events")
+      .doc(record.id)
+      .set({...dataEvent.data(), members_read: members_read})
   }
   return (
     <IconButton
-      onClick={updateRead}
-      disabled={loading || loaded || record.members_read[member]}
+      onClick={updateFb}
+      disabled={record.members_read[member]}
       edge="end"
     >
-      {(loaded || record.members_read[member]) ? <Check /> : <RemoveCircle color="primary" />}
+      {(record.members_read[member]) ? <Check /> : <RemoveCircle color="primary" />}
     </IconButton>
   );
 
@@ -50,33 +49,7 @@ const NotificationList = (props) => {
     .collection("events")
     .onSnapshot(() => {});
 
-  React.useEffect(() => {
-    firebase
-      .firestore()
-      .collection("events")
-      .onSnapshot((querySnapshot) => {
-        var events = [];
-        querySnapshot.forEach((doc) => {
-          events.push({ ...doc.data(), id: doc.id });
-        });
-
-        if (currentUser) {
-          if (currentUser.role === "タレント") {
-            events = events.filter((event) =>
-              event.members.some((member) => member === account_id)
-            );
-          } else if (currentUser.role === "管理") {
-            events = events.filter((event) => event.createdby === account_id);
-          }
-        }
-
-        props.setNotifs(events);
-        // console.log("Currentevents: ", events);
-      });
-    return () => {
-      unsubscribe();
-    };
-  });
+  
 
   if (loading) return <Loading />;
   if (!props.notifs || !props.notifs[0])
@@ -154,7 +127,30 @@ function NotificationButton(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const menuId = "menu";
+  const [{ currentUser }, loading] = useContext();
+  React.useEffect(() => {
+    firebase
+      .firestore()
+      .collection("events")
+      .onSnapshot((querySnapshot) => {
+        var events = [];
+        querySnapshot.forEach((doc) => {
+          events.push({ ...doc.data(), id: doc.id });
+        });
 
+        if (currentUser) {
+          if (currentUser.role === "タレント") {
+            events = events.filter((event) =>
+              event.members.some((member) => member === account_id)
+            );
+          } else if (currentUser.role === "管理") {
+            events = events.filter((event) => event.createdby === account_id);
+          }
+          setNotifs(events);
+        }
+        console.log("Currentevents: ", events);
+      });
+  },[currentUser]);
   const handleNotificationsOpen = (event) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -187,7 +183,6 @@ function NotificationButton(props) {
       </List>
     </Menu>
   );
-
   return (
     <>
       <Box sx={{ display: { xs: "none", md: "flex" } }}>
@@ -201,7 +196,7 @@ function NotificationButton(props) {
           <Badge
             badgeContent={
               notifs?.filter(
-                (notif) => notif.members_read[account_id] === false
+                (notif) => notif.members_read[account_id] !== true
               ).length
             }
             color="error"
