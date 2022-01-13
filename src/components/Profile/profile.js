@@ -18,8 +18,28 @@ import {
 } from "react-admin";
 import { validateName } from "../../utils/validate";
 import firebase, { auth } from "../../db/firebase";
+import { Button, Popover } from "@material-ui/core";
+
+
+var users = new Map();
+// users.set("admin@gmail.com", { name: "adminfake", role: "アドミンfake" });
+var db = firebase.firestore();
+db.collection("accounts")
+  .get()
+  .then((snapshot) => {
+    snapshot.forEach((doc) => {
+      users.set(doc.data().mail, {
+        avatar: doc.data().avatar,
+        name: doc.data().name,
+        role: doc.data().role,
+      });
+    });
+  });
+
 
 const ProfileContext = createContext();
+
+console.log(users);
 
 export const ProfileProvider = ({ children }) => {
   const [profileVersion, setProfileVersion] = useState(0);
@@ -42,6 +62,20 @@ export const ProfileProvider = ({ children }) => {
 export const useProfile = () => useContext(ProfileContext);
 
 export const ProfileEdit = ({ staticContext, ...props }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
+  let account_id = auth.currentUser?.email ?? "";
   console.log("ProfileEdit");
   const dataProvider = useDataProvider();
   const notify = useNotify();
@@ -112,14 +146,47 @@ export const ProfileEdit = ({ staticContext, ...props }) => {
     return null;
   }
 
+  
+
   return (
     <SaveContextProvider value={saveContext}>
-      <SimpleForm save={handleSave} record={identity ? identity : {}}>
-        <TextInput source="fullName" validate={validateName} />
-        <ImageInput source="avatar" validate={required()}>
-          <ImageField />
-        </ImageInput>
-      </SimpleForm>
+      <h1>プロフィール</h1>
+      <div style={{ marginLeft: '50px' }}>
+        <h2>名前</h2>
+        <p>{users.get(account_id)?.name}</p>
+        <h2>アバター</h2>
+        {users.get(account_id)?.avatar ? (
+          <img src={users.get(account_id)?.avatar} style={{ height: '200px', width: '200px' }} />
+        ) : (
+          <img style={{ height: '200px', width: '200px' }} />
+        )}
+      </div>
+      <Button variant="contained" aria-describedby={id} onClick={handleClick} style={{width:'300px'}}>
+        編集
+      </Button>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'center',
+        }}
+      >
+        <div style={{width: '800px', height: '450px', marginBottom: '100px'}}>
+          <h1　style={{textAlign: 'center'}}>編集プロフィール</h1>
+          <SimpleForm save={handleSave} record={identity ? identity : {}}>
+            <TextInput source="fullName" initialValue="" validate={validateName} />
+            <ImageInput source="avatar" validate={required()}>
+              <ImageField />
+            </ImageInput>
+          </SimpleForm>
+        </div>
+        
+      </Popover>
+
+
     </SaveContextProvider>
   );
 };

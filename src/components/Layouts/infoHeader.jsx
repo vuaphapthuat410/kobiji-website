@@ -40,6 +40,9 @@ const Info = () => {
 
   const classes = useStyles();
 
+  console.log(users.get(account_id)?.avatar);
+
+
   return (
     //In case this is not accepted, follow this instead:
     //https://stackoverflow.com/questions/52655827/where-i-can-change-the-profile-picture-in-the-react-admin-header
