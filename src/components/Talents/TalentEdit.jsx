@@ -102,6 +102,7 @@ const TalentEdit = (props) => {
 
   const onSuccess = async ({ data }) => {
     // Add talents to client field
+    if (data.status == "売れた") {
     var client = clients.find((_user) => _user.mail === data.client);
     let own = client?.own ?? [];
     own.push(data.mail);
@@ -115,6 +116,7 @@ const TalentEdit = (props) => {
         },
       },
     });
+  }
     await redirect(`/accounts/`);
   };
 
