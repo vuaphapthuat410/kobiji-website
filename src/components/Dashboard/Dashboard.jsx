@@ -24,7 +24,7 @@ function Dashboard() {
         filter: {},
       })
       .then(({ data }) => {
-        if (currentUser.role === "タレント") {
+        if (currentUser.role === "タレント" || currentUser.role === "クライアント" ) {
           data = data.filter((event) =>
             event.members.some((member) => member === account_id)
           );

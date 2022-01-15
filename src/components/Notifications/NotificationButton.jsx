@@ -139,7 +139,7 @@ function NotificationButton(props) {
         });
 
         if (currentUser) {
-          if (currentUser.role === "タレント") {
+          if (currentUser.role === "タレント" || currentUser.role === "クライアント" ) {
             events = events.filter((event) =>
               event.members.some((member) => member === account_id)
             );
