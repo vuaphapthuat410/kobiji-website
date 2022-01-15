@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useContext,
+  useEffect,
 } from "react";
 import {
   TextInput,
@@ -46,6 +47,7 @@ export const ProfileEdit = ({ staticContext, ...props }) => {
   const dataProvider = useDataProvider();
   const notify = useNotify();
   const [saving, setSaving] = useState();
+  const [profile, setProfile] = useState('');
   const { refreshProfile } = useProfile();
 
   const { loaded, identity } = useGetIdentity();
@@ -108,14 +110,28 @@ export const ProfileEdit = ({ staticContext, ...props }) => {
     [saving, handleSave]
   );
 
-  if (!loaded) {
+  const getProfile = async () => {
+    const data = await firebase
+      .firestore()
+      .collection("accounts")
+      .where("mail", "==", auth.currentUser.email)
+      .get();
+
+    setProfile(data.docs.at(0).data());
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, [auth]);
+
+  if (!loaded || profile === '') {
     return null;
   }
 
   return (
     <SaveContextProvider value={saveContext}>
       <SimpleForm save={handleSave} record={identity ? identity : {}}>
-        <TextInput source="fullName" validate={validateName} />
+        <TextInput source="name" validate={validateName} defaultValue={profile?.name}/>
         <ImageInput source="avatar" validate={required()}>
           <ImageField />
         </ImageInput>
