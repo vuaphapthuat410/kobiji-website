@@ -36,13 +36,13 @@ function Ava({record}){
       height: theme.spacing(3),
     },
     large: {
-      width: theme.spacing(7),
-      height: theme.spacing(7),
+      width: theme.spacing(12),
+      height: theme.spacing(12),
     },
   }));
   const classes = useStyles();
   return(
-    <Avatar src={record?.avatar} className={classes.small} />
+    <Avatar src={record?.avatar} className={classes.large} />
   )
 }
 
