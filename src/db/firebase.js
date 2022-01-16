@@ -1,8 +1,11 @@
 import firebase from "firebase";
+import "firebase/storage";
+
 import {
   FirebaseDataProvider,
   FirebaseAuthProvider,
 } from "react-admin-firebase";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDi0U5ii2wQP2mK0xl0XdFqCGQYstwQ5oY",
   authDomain: "itss2-32f90.firebaseapp.com",
@@ -51,4 +54,6 @@ export const dataProvider = FirebaseDataProvider(firebaseConfig, options);
 //         enabled: true,
 //     },
 // });
-export default firebase;
+const storage = firebase.storage();
+
+export { storage, firebase as default };
