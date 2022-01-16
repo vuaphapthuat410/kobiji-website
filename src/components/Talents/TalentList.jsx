@@ -17,7 +17,7 @@ import {
   ImageInput,
 } from "react-admin";
 import { makeStyles } from "@material-ui/core/styles";
-import firebase, { auth } from "../../db/firebase";
+import firebase, { auth, storage } from "../../db/firebase";
 import SearchInput from "../Layouts/SearchInput";
 import { downloadCSV } from "../Layouts/export";
 
@@ -131,7 +131,8 @@ const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWi
       <div style={{ float: "right", marginBottom: "30px" }}>
         <CreateButton label="追加" />
         <button label="エクスポート" 　onClick={()=>{downloadCSV(data,"talent")}}>エクスポート</button>
-        <OCR />
+        {/* <OCR /> */}
+        <ReactFirebaseFileUpload />
       </div>
     )}
     {user.role === "クライアント" && (
@@ -147,34 +148,79 @@ const ListActions = ({ user, searchInput,data, setSearchInput, isWishList, setWi
   </div>
 );
 
-function OCR() {
-  const [imagePath, setImagePath] = useState("");
+// function OCR() {
+//   const [imagePath, setImagePath] = useState("");
  
-  const handleChange = (event) => {
-    setImagePath(URL.createObjectURL(event.target.files[0]));
-  }
+//   const handleChange = (event) => {
+//     setImagePath(URL.createObjectURL(event.target.files[0]));
+//   }
  
-  const handleClick = () => {
-    Tesseract.recognize(
-      imagePath,
-      'jpn',
-      { logger: m => console.log(m) }
-    )
-    .catch (err => {
-      console.error(err);
-    })
-    .then(({ data: { text } }) => {
-      console.log(text);
-    })
-  }
+//   const handleClick = () => {
+//     Tesseract.recognize(
+//       imagePath,
+//       'jpn',
+//       { logger: m => console.log(m) }
+//     )
+//     .catch (err => {
+//       console.error(err);
+//     })
+//     .then(({ data: { text } }) => {
+//       console.log(text);
+//     })
+//   }
  
+//   return (
+//     <>
+//       <input type="file" onChange={handleChange} display="invisible"/>
+//       <button onClick={handleClick} style={{height:25}}> convert to text</button>
+//     </>
+//   );
+// }
+
+const ReactFirebaseFileUpload = () => {
+  const [image, setImage] = useState(null);
+  const [url, setUrl] = useState("");
+  const [progress, setProgress] = useState(0);
+
+  const handleChange = e => {
+    if (e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = () => {
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progress);
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then(url => {
+            setUrl(url);
+          });
+      }
+    );
+  };
+
   return (
-    <>
-      <input type="file" onChange={handleChange} display="invisible"/>
-      <button onClick={handleClick} style={{height:25}}> convert to text</button>
-    </>
+    <div>
+      <progress value={progress} max="100" />
+      <input type="file" onChange={handleChange} />
+      <button onClick={handleUpload}>Upload</button>
+    </div>
   );
-}
+};
 
 const TalentList = (props) => {
   const [page, setPage] = useState(1);
