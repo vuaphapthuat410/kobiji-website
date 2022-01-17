@@ -124,12 +124,12 @@ const Data = (props) => {
           setIsStatusSold(e.target.value === "売れた" ? true : false);
         }}
       />
-      <SelectInput
+      {/* <SelectInput
         source="country"
         label="国籍"
         choices={countryList}
         validate={validateCountry}
-      />
+      /> */}
 
       {isStatusSold && (
         <SelectInput
