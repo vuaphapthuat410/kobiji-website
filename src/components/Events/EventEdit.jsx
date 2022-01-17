@@ -4,8 +4,13 @@ import {
   AutocompleteArrayInput,
   DateInput,
   Edit,
-  ListButton, SaveButton, SelectInput, SimpleForm,
-  TextInput, Toolbar, TopToolbar
+  ListButton,
+  SaveButton,
+  SelectInput,
+  SimpleForm,
+  TextInput,
+  Toolbar,
+  TopToolbar,
 } from "react-admin";
 import useContext from "../../db/useContext";
 import { validateRequired, validateTitle } from "../../utils/validate";
@@ -23,7 +28,10 @@ const EditActionList = ({ basePath, data }) => (
 
 function userChoices(users) {
   return users.map((user) => {
-    return { id: user.mail, name: `(${user.role}) ${user.name} - ${user.mail}` };
+    return {
+      id: user.mail,
+      name: `(${user.role}) ${user.name} - ${user.mail}`,
+    };
   });
 }
 
@@ -34,6 +42,12 @@ const CreateToolbar = (props) => {
         label="変更"
         redirect="show"
         transform={(data) => {
+          let members_read = {};
+          data.members.forEach(
+            (member) =>
+              (members_read[member] = data.members_read[member] ?? false)
+          );
+          data.members_read = members_read;
           data.date = new Date(data.date);
           return data;
         }}
@@ -43,28 +57,13 @@ const CreateToolbar = (props) => {
   );
 };
 
-
-
 const EventEdit = (props) => {
   const [{ users }, loading] = useContext();
 
   if (loading) return <></>;
 
   return (
-    <Edit
-      {...props}
-      actions={<EditActionList />}
-      transform={(data) => {
-        let members_read = {};
-        data.members.forEach(
-          (member) =>
-            (members_read[member] = data.members_read[member] ?? false)
-        );
-        data.members_read = members_read;
-        data.date = new Date(data.date);
-        return data;
-      }}
-    >
+    <Edit {...props} actions={<EditActionList />}>
       <SimpleForm toolbar={<CreateToolbar />}>
         <TextInput source="title" label="名前" validate={validateTitle} />
         <TextInput
