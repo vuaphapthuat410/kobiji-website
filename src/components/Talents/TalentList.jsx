@@ -156,18 +156,20 @@ const ListActions = ({
         className="action-bar"
       >
         <CreateButton
-          variant="contained"
-          color="red"
-          style={{
-            background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
-          }}
+          // variant="contained"
+          // color="red"
+          // style={{
+          //   background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+          // }}
           label="追加"
         />
         <Button
-          variant="contained"
-          color="red"
+          // variant="contained"
+          // color="red"
           style={{
-            background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+            // background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+            color: "#3f51b5",
+            fontSize: "0.8125rem",
           }}
           label="エクスポート"
           onClick={() => {
@@ -255,20 +257,22 @@ const ReactFirebaseFileUpload = () => {
       />
       <label
         class="ocr_button"
-        variant="contained"
-        color="red"
+        // variant="contained"
+        // color="red"
         style={{
-          background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+          // background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+          color: "#3f51b5",
         }}
         htmlFor="ocr_file"
       >
         履歴書アップロード
       </label>
       <Button
-        variant="contained"
-        color="red"
+        // variant="contained"
+        // color="red"
         style={{
-          background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+          // background: "linear-gradient(45deg, #2196f3 30%, #21cbf3 90%)",
+          color: "#3f51b5",
         }}
         // disabled={url ? true : false}
         onClick={async () => {
@@ -276,19 +280,25 @@ const ReactFirebaseFileUpload = () => {
             setIsOcrLoading(true);
             const imageName = await handleUpload();
             setTimeout(async () => {
-              const _data = await axios.get(
-                `https://ocr-cv-detect.herokuapp.com/ocr?files=${imageName}`
-              );
-              console.log("data nee", _data);
-              setIsOcrLoading(false);
+              try {
+                const _data = await axios.get(
+                  `https://ocr-cv-detect.herokuapp.com/ocr?files=${imageName}`
+                );
+                console.log("data nee", _data);
+                setIsOcrLoading(false);
 
-              setOcrData(_data.data.data);
-              handleOpen();
-            }, 5000);
+                setOcrData(_data.data.data);
+                handleOpen();
+              } catch (error) {
+                console.log(error);
+                setIsOcrLoading(false);
+              }
+            }, 3000);
             // setOcrData(fakeData);
             // handleOpen();
           } catch (error) {
-            throw error;
+            console.log(error);
+            setIsOcrLoading(false);
           }
         }}
       >
@@ -394,7 +404,7 @@ const TalentList = (props) => {
         <TextField source="mail" label="メールアドレス" />
         <TextField source="birthday" label="生年月日" />
         <TextField source="status" label="ステータス" />
-        <TextField source="country" label="国籍" />
+        {/* <TextField source="country" label="国籍" /> */}
         {currentUser.role === "クライアント" ? (
           ""
         ) : (

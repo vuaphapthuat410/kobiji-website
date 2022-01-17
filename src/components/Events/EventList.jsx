@@ -121,6 +121,9 @@ const EventList = (props) => {
         />
         <NameField label="参加者" />
         <ShowButton label="詳細" />
+        {/* <EditButton label="変更" />
+        <DeleteButton label="削除" undoable={false}  /> */}
+
         {currentUser.role === "管理" && <EditButton label="変更" />}
         {currentUser.role === "管理" && (
           <DeleteButton undoable={false} label="削除" redirect={false} />

@@ -39,7 +39,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 1000,
-  height: 500,
+  height: 600,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -55,9 +55,9 @@ export default function BasicModal({
   reFresh,
 }) {
   const { name, birthday, address, email, phoneNumber, introduction } = data;
-  const [gender, setGender] = React.useState("");
+  // const [gender, setGender] = React.useState("");
   const [password, setPassword] = React.useState("");
-  
+
   const [createTalent, { loading, loaded }] = useMutation({
     type: "create",
     resource: "accounts",
@@ -72,11 +72,12 @@ export default function BasicModal({
         createdate: firestore.Timestamp.fromDate(new Date()),
         lastupdate: firestore.Timestamp.fromDate(new Date()),
         createdby: auth.currentUser.email,
-        gender,
+        gender: "女",
         password,
         role: "タレント",
         status: "商売可能",
         updatedby: auth.currentUser.email,
+        cv_url: url,
       },
     },
   });
@@ -123,7 +124,7 @@ export default function BasicModal({
                 />
 
                 <InputLabel id="demo-simple-select-label">性別</InputLabel>
-                <Select
+                {/* <Select
                   label="性別"
                   id="demo-simple-select"
                   // choices={genderList}
@@ -136,7 +137,7 @@ export default function BasicModal({
                   {genderList.map((choice) => (
                     <MenuItem value={choice.id}>{choice.name}</MenuItem>
                   ))}
-                </Select>
+                </Select> */}
 
                 <TextField
                   label="パスワード"
@@ -179,11 +180,12 @@ export default function BasicModal({
                     createdate: firestore.Timestamp.fromDate(new Date()),
                     lastupdate: firestore.Timestamp.fromDate(new Date()),
                     createdby: auth.currentUser.email,
-                    gender,
+                    gender: "女",
                     password,
                     role: "タレント",
                     status: "商売可能",
                     updatedby: auth.currentUser.email,
+                    cv_url: url,
                   },
                 };
                 console.log("create payload", payload);

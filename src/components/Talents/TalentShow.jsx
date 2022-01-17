@@ -86,6 +86,12 @@ function Ava({ record }) {
             自己紹介：<span>{record.self_introduction}</span>
           </label>{" "}
         </p>
+
+        <p>
+          <label>
+            CV：<span>{record.cv_url}</span>
+          </label>{" "}
+        </p>
       </div>
     </div>
   );

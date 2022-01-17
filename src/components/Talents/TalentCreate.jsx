@@ -18,17 +18,15 @@ import {
   useRedirect,
 } from "react-admin";
 import { auth } from "../../db/firebase";
-import {
-  countryList,
-  genderList, statusList
-} from "../../utils/list";
+import { countryList, genderList, statusList2 } from "../../utils/list";
 import {
   validateBirthday,
   validateCountry,
   validateEmail,
   validateGender,
   validateName,
-  validatePasswd, validateStatus
+  validatePasswd,
+  validateStatus,
 } from "../../utils/validate";
 
 const CreateActionList = ({ basePath, data }) => (
@@ -101,7 +99,7 @@ const AccountCreate = (props) => {
   if (loading) return <Loading />;
 
   return (
-    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess} >
+    <Create {...props} actions={<CreateActionList />} onSuccess={onSuccess}>
       <SimpleForm toolbar={<CreateToolbar />}>
         {/* <TextInput source="id" label="ID" /> */}
         <TextInput source="name" label="名前" validate={validateName} />
@@ -133,16 +131,21 @@ const AccountCreate = (props) => {
         <SelectInput
           source="status"
           label="ステータス"
-          choices={[{ id: "新規", name: "新規" }]}
+          choices={statusList2}
           validate={validateStatus}
         />
 
-        <SelectInput
+        <TextInput source="phoneNumber" label="電話番号" />
+
+        <TextInput source="address" label="住所" />
+        <TextInput source="self_introduction" label="自己紹介" />
+
+        {/* <SelectInput
           source="country"
           label="国籍"
           choices={countryList}
           validate={validateCountry}
-        />
+        /> */}
       </SimpleForm>
     </Create>
   );
